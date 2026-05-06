@@ -1,0 +1,42 @@
+[
+  {
+    "name": "标准海水 (35psu)",
+    "ions": { "na": 0.48, "mg": 0.054, "cl": 0.558, "so4": 0.029 },
+    "env": { "wet_time": 12.0, "wet_temp": 25.0, "dry_time": 12.0, "dry_temp": 25.0, "cycle": 1.0 }
+  },
+  {
+    "name": "上海港 (东海)",
+    "ions": { "na": 0.18, "mg": 0.02, "cl": 0.22, "so4": 0.012 },
+    "env": { "wet_time": 6.0, "wet_temp": 20.0, "dry_time": 6.0, "dry_temp": 25.0, "cycle": 2.0 }
+  },
+  {
+    "name": "宁波港 (东海)",
+    "ions": { "na": 0.38, "mg": 0.045, "cl": 0.45, "so4": 0.024 },
+    "env": { "wet_time": 4.0, "wet_temp": 22.0, "dry_time": 8.0, "dry_temp": 25.0, "cycle": 2.0 }
+  },
+  {
+    "name": "厦门港 (南海)",
+    "ions": { "na": 0.42, "mg": 0.048, "cl": 0.5, "so4": 0.026 },
+    "env": { "wet_time": 6.0, "wet_temp": 24.0, "dry_time": 6.0, "dry_temp": 25.0, "cycle": 2.0 }
+  },
+  {
+    "name": "大连港 (黄海)",
+    "ions": { "na": 0.425, "mg": 0.048, "cl": 0.493, "so4": 0.026 },
+    "env": { "wet_time": 6.0, "wet_temp": 15.0, "dry_time": 6.0, "dry_temp": 20.0, "cycle": 2.0 }
+  },
+  {
+    "name": "天津港 (渤海)",
+    "ions": { "na": 0.397, "mg": 0.045, "cl": 0.461, "so4": 0.024 },
+    "env": { "wet_time": 6.0, "wet_temp": 12.0, "dry_time": 6.0, "dry_temp": 18.0, "cycle": 2.0 }
+  },
+  {
+    "name": "深圳港 (南海)",
+    "ions": { "na": 0.466, "mg": 0.052, "cl": 0.541, "so4": 0.028 },
+    "env": { "wet_time": 10.0, "wet_temp": 26.0, "dry_time": 2.0, "dry_temp": 28.0, "cycle": 2.0 }
+  },
+  {
+    "name": "青岛港 (黄海)",
+    "ions": { "na": 0.438, "mg": 0.049, "cl": 0.509, "so4": 0.027 },
+    "env": { "wet_time": 6.0, "wet_temp": 18.0, "dry_time": 6.0, "dry_temp": 22.0, "cycle": 2.0 }
+  }
+]

@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-200 text-slate-950 antialiased selection:bg-brand-100 selection:text-brand-700;
+  }
+}
+
+@layer components {
+  /* 顶级悬浮卡片 - 简化版，避免多层堆叠 */
+  .premium-card {
+    @apply bg-white rounded-[32px] shadow-sm transition-all duration-500;
+  }
+
+  .premium-card:hover {
+    @apply shadow-md;
+  }
+
+  /* 输入组件标准样式 */
+  .input-standard {
+    @apply bg-slate-100 border border-slate-200 rounded-2xl font-bold text-slate-700 focus:border-brand-500 focus:bg-white transition-all outline-none;
+  }
+
+  /* 极简滚动条 - 提升轻盈感 */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-200/60 rounded-full hover:bg-slate-300 transition-colors;
+  }
+
+  /* 侧边栏导航交互 */
+  .nav-item-active {
+    @apply bg-brand-50 text-brand-700 font-black border-r-4 border-brand-600 shadow-[inset_-4px_0_12px_rgba(37,99,235,0.05)];
+  }
+
+  /* 渐变主按钮 */
+  .btn-primary {
+    @apply bg-gradient-to-br from-brand-600 to-brand-700 text-white rounded-2xl font-black shadow-xl shadow-brand-100 hover:shadow-brand-300/40 hover:-translate-y-1 active:scale-95 transition-all duration-300;
+  }
+}
+
