@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
-import { Clock, Zap, Cpu, ShieldAlert, ChevronRight } from 'lucide-react';
+import { Clock, Zap, Cpu, ShieldAlert } from 'lucide-react';
 
 const Step6Time = () => {
   const { predictionData, updateData } = usePredictionStore();
@@ -81,7 +81,7 @@ const Step6Time = () => {
           
           <div className="flex-1 flex flex-col space-y-6 min-h-0">
             <textarea 
-              className="flex-1 p-8 font-mono text-3xl font-black tracking-widest leading-relaxed bg-slate-50 border-2 border-slate-100 rounded-[32px] resize-none focus:bg-white text-slate-900 outline-none focus:border-brand-300 transition-all shadow-inner custom-scrollbar"
+              className="flex-1 p-6 font-mono text-2xl font-black tracking-widest leading-relaxed bg-slate-50 border-2 border-slate-100 rounded-[32px] resize-none focus:bg-white text-slate-900 outline-none focus:border-brand-300 transition-all shadow-inner custom-scrollbar"
               value={timeSeriesStr}
               placeholder="0, 28, 90, 180, 365..."
               onChange={(e) => setTimeSeriesStr(e.target.value)}
@@ -118,7 +118,7 @@ const Step6Time = () => {
             </button>
           </div>
 
-          <div className={`space-y-8 flex-1 flex flex-col min-h-0 transition-all ${loadMode ? 'opacity-100' : 'opacity-40 pointer-events-none grayscale'}`}>
+          <div className={`space-y-4 flex-1 flex flex-col min-h-0 transition-all ${loadMode ? 'opacity-100' : 'opacity-40 pointer-events-none grayscale'}`}>
             <div className="bg-slate-50 p-2 rounded-2xl flex gap-3 shrink-0">
               {shapes.map((t) => (
                 <button
@@ -139,7 +139,7 @@ const Step6Time = () => {
                 <input 
                   type="text" 
                   inputMode="decimal"
-                  className={`w-full bg-slate-50/50 text-7xl font-black py-8 px-12 border-2 rounded-[32px] transition-all outline-none text-right pr-24 ${
+                  className={`w-full bg-slate-50/50 text-4xl font-black py-5 px-10 border-2 rounded-[32px] transition-all outline-none text-right pr-24 ${
                     isOverloaded ? 'border-red-500 text-red-600' : 'border-slate-100 focus:border-brand-500 text-slate-900'
                   }`}
                   value={loadKn}
@@ -155,7 +155,7 @@ const Step6Time = () => {
                   荷载率 (Hzl Ratio)
                 </span>
                 <div className="flex items-baseline gap-4">
-                  <span className={`text-6xl font-black tracking-tighter ${isOverloaded ? 'text-red-600' : 'text-brand-600'}`}>
+                  <span className={`text-3xl font-black tracking-tighter ${isOverloaded ? 'text-red-600' : 'text-brand-600'}`}>
                     {currentHzl}%
                   </span>
                   {isOverloaded && (

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, type ChangeEvent } from 'react';
 import { 
-  Search, Plus, Edit2, Trash2, Download, Upload, Filter, 
-  ChevronDown, ChevronUp, MoreHorizontal, Eye, EyeOff, X, RefreshCw, FileSpreadsheet
+  Search, Plus, Edit2, Trash2, Download, Upload, 
+  X, RefreshCw, Eye, EyeOff, ChevronDown
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { databaseService } from '../../services/databaseService';
 import DataEditorModal from './DataEditorModal';
 import * as XLSX from 'xlsx';
@@ -13,13 +12,13 @@ import { invoke } from '@tauri-apps/api/core';
 const COLUMNS = [
   { id: 'id', label: 'ID', category: 'ID', visible: false },
   { id: 'cement', label: '水泥种类', category: 'Material' },
-  { id: 'cementstrength', label: '28d水泥强度/Mpa', category: 'Material' },
+  { id: 'cementstrength', label: '28d水泥强度/MPa', category: 'Material' },
   { id: 'specimentype', label: '试件类型', category: 'Material' },
   { id: 'specimenscale', label: '试件尺寸/mm', category: 'Material' },
   { id: 'wc', label: '水灰比', category: 'Material' },
   { id: 'specificarea', label: '表体比/m⁻¹', category: 'Material' },
   { id: 'sandratio', label: '砂率', category: 'Material' },
-  { id: 'initialstrength', label: '初始强度/Mpa', category: 'Material' },
+  { id: 'initialstrength', label: '初始强度/MPa', category: 'Material' },
   { id: 'flyash', label: '粉煤灰掺量/%', category: 'Material' },
   { id: 'slag', label: '矿渣掺量/%', category: 'Material' },
   { id: 'silicafume', label: '硅灰掺量/%', category: 'Material' },
@@ -34,7 +33,7 @@ const COLUMNS = [
   { id: 'dryingtemp', label: '干燥温度/℃', category: 'Environment' },
   { id: 'cycle', label: '循环周期/d', category: 'Environment' },
   { id: 'degradationtime', label: '劣化时间/d', category: 'Environment' },
-  { id: 'finalstrength', label: '劣化强度/Mpa', category: 'Environment' },
+  { id: 'finalstrength', label: '劣化强度/MPa', category: 'Environment' },
   
   { id: 'source', label: '数据来源', category: 'Source' },
   { id: 'title', label: '文献标题', category: 'Source' },
@@ -55,6 +54,9 @@ const DataBrowser = () => {
     Environment: true,
     Source: true,
   });
+  const [pageSize, setPageSize] = useState(100);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,8 +128,37 @@ const DataBrowser = () => {
   };
 
   const handleImport = () => {
-    // Navigate to Data Filter module which handles import correctly with validation
-    alert("请在左侧菜单选择『数据筛选』进行批量导入，以确保数据的重复项校验和AI异常筛查。");
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    const reader = new FileReader();
+    reader.onload = async (evt) => {
+      try {
+        const bstr = evt.target?.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const rawData = XLSX.utils.sheet_to_json(ws);
+        
+        if (rawData.length > 0) {
+          await databaseService.addRecordsBulk(rawData);
+          alert(`成功导入 ${rawData.length} 条数据！`);
+          loadData();
+        }
+      } catch (err) {
+        console.error("Import failed:", err);
+        alert("文件解析或导入失败，请检查格式。");
+      } finally {
+        setIsImporting(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    };
+    reader.readAsBinaryString(file);
   };
 
   const filteredData = data.filter(row => {
@@ -145,6 +176,9 @@ const DataBrowser = () => {
       }
     });
   });
+
+  const displayedData = filteredData.slice(0, pageSize);
+  const hasMore = filteredData.length > pageSize;
 
   return (
     <div className="flex flex-col h-full bg-[#f8fafc] overflow-hidden animate-in fade-in duration-500">
@@ -185,9 +219,11 @@ const DataBrowser = () => {
           <div className="flex items-center gap-3">
             <button 
               onClick={handleImport}
-              className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all"
+              disabled={isImporting}
+              className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all disabled:opacity-50"
             >
-              <Upload size={18} /> 导入数据
+              {isImporting ? <RefreshCw size={18} className="animate-spin" /> : <Upload size={18} />} 导入数据
+              <input type="file" ref={fileInputRef} className="hidden" accept=".xlsx,.xls" onChange={handleFileUpload} />
             </button>
             <button 
               onClick={handleExport}
@@ -255,16 +291,16 @@ const DataBrowser = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((row, idx) => (
+                {displayedData.map((row, idx) => (
                   <tr 
                     key={row.id} 
                     onClick={() => setSelectedRowIndex(idx)}
                     onDoubleClick={() => { setSelectedRowIndex(idx); setModalMode('edit'); setIsModalOpen(true); }}
-                    className={`group transition-colors border-b border-slate-50 last:border-0 cursor-pointer ${selectedRowIndex === idx ? 'bg-brand-50' : 'hover:bg-brand-50/30'}`}
+                    className={`group transition-all border-b border-slate-50 last:border-0 cursor-pointer relative ${selectedRowIndex === idx ? 'bg-brand-100/60 shadow-[inset_6px_0_0_0_#2563eb] z-10' : 'hover:bg-slate-50'}`}
                   >
-                    <td className="px-6 py-4 text-xs font-bold text-slate-400">{idx + 1}</td>
+                    <td className={`px-6 py-4 text-xs transition-all ${selectedRowIndex === idx ? 'font-black text-brand-600' : 'font-bold text-slate-400'}`}>{idx + 1}</td>
                     {COLUMNS.filter(col => col.visible !== false && visibleCategories[col.category as keyof typeof visibleCategories]).map(col => (
-                      <td key={col.id} className="px-6 py-4 text-xs font-bold text-slate-600 whitespace-nowrap">
+                      <td key={col.id} className={`px-6 py-4 text-xs whitespace-nowrap transition-all ${selectedRowIndex === idx ? 'font-black text-slate-900 scale-[1.01]' : 'font-bold text-slate-600'}`}>
                         {row[col.id]}
                       </td>
                     ))}
@@ -272,6 +308,18 @@ const DataBrowser = () => {
                 ))}
               </tbody>
             </table>
+          )}
+          
+          {hasMore && !loading && (
+            <div className="p-8 flex justify-center bg-slate-50/50">
+              <button 
+                onClick={() => setPageSize(prev => prev + 100)}
+                className="flex items-center gap-2 px-8 py-3 bg-white border border-slate-200 text-brand-600 rounded-2xl font-black text-sm hover:bg-brand-50 hover:border-brand-200 transition-all shadow-sm"
+              >
+                <ChevronDown size={18} />
+                加载更多数据 ({filteredData.length - pageSize} 条剩余)
+              </button>
+            </div>
           )}
           {!loading && filteredData.length === 0 && (
             <div className="p-20 flex flex-col items-center justify-center text-slate-400">

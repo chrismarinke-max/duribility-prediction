@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
-import { Beaker, Calculator, X, FlaskConical, CheckCircle2, ChevronRight, Activity } from 'lucide-react';
+import { Beaker, Calculator, X, FlaskConical, CheckCircle2, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clusterCement } from '../../utils/math/scientific_utils';
 
@@ -108,7 +108,7 @@ const Step1Materials = () => {
 
             <div className="p-6 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden mt-4 flex-1 min-h-0">
               <Calculator className="absolute top-2 left-2 text-slate-200" size={48} />
-              <span className="text-8xl font-black text-brand-600 tracking-tighter z-10 leading-none">
+              <span className="text-6xl font-black text-brand-600 tracking-tighter z-10 leading-none">
                 {getCategoryLetter(predictionData.cementType || 0)}
               </span>
               <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mt-2">AI Result Grade</p>
@@ -158,7 +158,7 @@ const Step1Materials = () => {
                   value={predictionData.cementStrength ?? 42.5}
                   onChange={(e) => updateData({ cementStrength: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                 />
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">Mpa</span>
+                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">MPa</span>
               </div>
             </div>
 

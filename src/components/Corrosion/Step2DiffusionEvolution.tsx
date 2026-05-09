@@ -62,19 +62,21 @@ const Step2DiffusionEvolution = ({ results }: { results: DataPoint[] }) => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis 
                 dataKey="time" 
-                axisLine={{ stroke: '#94a3b8', strokeWidth: 1 }} 
-                tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                label={{ value: '龄期 (d)', position: 'insideBottom', offset: -10, fontSize: 10, fontWeight: 800, fill: '#94a3b8' }}
+                axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                tickLine={true}
+                tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                label={{ value: '龄期 (d)', position: 'insideBottom', offset: -10, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
               />
               <YAxis 
                 tickFormatter={formatYAxis}
-                axisLine={{ stroke: '#94a3b8', strokeWidth: 1 }} 
-                tick={{ fontSize: 10, fontWeight: 700, fill: '#64748b' }}
-                label={{ value: 'D(t) (m²/s)', angle: -90, position: 'insideLeft', offset: -20, fontSize: 10, fontWeight: 800, fill: '#94a3b8' }}
+                axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                tickLine={true}
+                tick={{ fontSize: 13, fontWeight: 900, fill: '#0f172a' }}
+                label={{ value: 'D(t) (m²/s)', angle: -90, position: 'insideLeft', offset: -25, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
               />
               <Tooltip 
                 contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 800 }}
-                formatter={(value: number) => [value.toExponential(4), '扩散系数 D(t)']}
+                formatter={(value: any) => [Number(value).toExponential(4), '扩散系数 D(t)']}
               />
               <Line 
                 type="monotone" 

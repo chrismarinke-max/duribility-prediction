@@ -1,7 +1,7 @@
-import React, { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, type ChangeEvent } from 'react';
 import { 
-  Upload, FileCheck, ShieldAlert, Database, ChevronRight, 
-  Search, AlertCircle, CheckCircle2, Loader2, X, FileSpreadsheet, Trash2, Download, Filter, Play, Save, Zap
+  Upload, ShieldAlert, Database, 
+  AlertCircle, CheckCircle2, Loader2, FileSpreadsheet, Trash2, Download, Play, RefreshCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as XLSX from 'xlsx';
@@ -33,7 +33,7 @@ const DataFilter = () => {
     return { total, duplicates, anomalies, clean };
   }, [fileData]);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -64,11 +64,13 @@ const DataFilter = () => {
     setIsCheckingDup(true);
     try {
       const duplicateFlags = await databaseService.checkDuplicatesBulk(fileData);
-      const updatedData = fileData.map((row, idx) => {
+      const updatedData: DataRow[] = fileData.map((row, idx) => {
         if (duplicateFlags[idx]) {
-          return { ...row, _status: 'duplicate', _statusText: 'DUPLICATE' };
+          return { ...row, _status: 'duplicate', _statusText: 'DUPLICATE' } as DataRow;
         }
-        return { ...row, _status: row._status === 'pending' ? 'ok' : row._status, _statusText: row._status === 'pending' ? 'VALID' : row._statusText };
+        const status = row._status === 'pending' ? 'ok' : row._status;
+        const text = row._status === 'pending' ? 'VALID' : row._statusText;
+        return { ...row, _status: status, _statusText: text } as DataRow;
       });
       setFileData(updatedData);
     } catch (e) {
@@ -104,7 +106,7 @@ const DataFilter = () => {
 
       const predictions = await databaseService.runBatchInference(aiVectors);
 
-      const updatedData = fileData.map((row, idx) => {
+      const updatedData: DataRow[] = fileData.map((row, idx) => {
         if (row._status === 'duplicate') return row;
         
         const pred = predictions[idx];
@@ -112,13 +114,14 @@ const DataFilter = () => {
         const error = real !== 0 ? (Math.abs(pred - real) / real) * 100 : 0;
         
         const isAnomaly = error > maxError;
-        return { 
+        const result: DataRow = { 
           ...row, 
           _status: isAnomaly ? 'anomaly' : 'ok', 
           _statusText: isAnomaly ? 'ERROR' : 'VALID',
           _error: error,
           finalstrength_pred: pred
         };
+        return result;
       });
 
       setFileData(updatedData);
@@ -179,6 +182,7 @@ const DataFilter = () => {
     }
   };
 
+
   return (
     <div className="flex flex-col h-full bg-[#f8fafc] animate-in fade-in duration-700">
       {/* Top Action Bar */}
@@ -205,7 +209,7 @@ const DataFilter = () => {
                 disabled={isCheckingDup || fileData.length === 0}
                 className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#e8eaed] text-slate-600 rounded-[18px] font-black text-xs hover:bg-slate-50 transition-all disabled:opacity-50 shadow-sm"
               >
-                {isCheckingDup ? <Loader2 size={16} className="animate-spin text-blue-500" /> : <Search size={16} className="text-blue-500" />} 查重校验
+                {isCheckingDup ? <Loader2 size={16} className="animate-spin text-blue-500" /> : <RefreshCcw size={16} className="text-blue-500" />} 查重校验
               </button>
               
               <div className="flex items-center gap-3 bg-white border border-[#ffe0bd] p-1.5 rounded-[18px] px-5 h-[38px]">
@@ -229,12 +233,13 @@ const DataFilter = () => {
           </div>
 
           <div className="flex items-center gap-4">
+
             <button 
               onClick={handleExport}
               disabled={fileData.length === 0}
-              className="flex items-center gap-2 px-8 py-3 bg-[#4285f4] text-white rounded-2xl font-black text-xs hover:bg-[#3367d6] transition-all shadow-xl shadow-blue-100 disabled:opacity-50"
+              className="flex items-center gap-2 px-8 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-xs hover:bg-slate-50 transition-all disabled:opacity-50"
             >
-              <Save size={16} /> 导出结果
+              <Download size={16} /> 导出结果
             </button>
             <button className="p-3 bg-[#fde8e8] text-[#f05252] rounded-2xl hover:bg-[#fbd5d5] transition-all" onClick={() => setFileData([])}>
               <Trash2 size={20} />
@@ -290,7 +295,7 @@ const DataFilter = () => {
                   <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest w-40">Status 指示</th>
                   <th className="px-8 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">Title 标题/文献溯源</th>
                   <th className="px-8 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">W/C</th>
-                  <th className="px-8 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">Cement (Mpa)</th>
+                  <th className="px-8 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">Cement (MPa)</th>
                   <th className="px-8 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">Time (d)</th>
                   <th className="px-10 py-6 text-left text-[11px] font-black text-slate-400 tracking-widest">Consistency 校验</th>
                 </tr>

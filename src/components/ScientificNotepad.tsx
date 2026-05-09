@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ClipboardList, Save, Trash2, Plus, Search, Tag, Clock, FileText } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ClipboardList, Save, Trash2, Plus, Search, Tag, FileText } from 'lucide-react';
 
 interface Note {
   id: string;

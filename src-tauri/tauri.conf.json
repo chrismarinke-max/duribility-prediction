@@ -35,6 +35,11 @@
     ],
     "resources": [
       "assets/*"
-    ]
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "perMachine"
+      }
+    }
   }
 }

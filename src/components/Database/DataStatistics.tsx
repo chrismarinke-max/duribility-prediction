@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
-  BarChart3, PieChart, TrendingUp, Download, Maximize2, 
-  Layers, FlaskConical, Globe2, BookOpen, Calculator, RefreshCw
+  BarChart3, Download, 
+  FlaskConical, Globe2, BookOpen, Calculator, RefreshCw
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { databaseService } from '../../services/databaseService';
 
 const CATEGORIES = [
@@ -173,7 +172,8 @@ const DataStatistics = () => {
                       <span className="text-xs font-black text-slate-900 uppercase tracking-tighter italic">{metric.label}</span>
                     </td>
                     {headers.map((header, i) => {
-                      const colName = COLUMN_MAPPING[activeCat as keyof typeof COLUMN_MAPPING][header];
+                      const mapping: any = COLUMN_MAPPING[activeCat as keyof typeof COLUMN_MAPPING];
+                      const colName = mapping[header];
                       const val = stats[colName] ? stats[colName][metric.id] : '--';
                       
                       return (

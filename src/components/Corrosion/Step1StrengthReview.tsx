@@ -123,18 +123,19 @@ const Step1StrengthReview = ({ results }: { results: DataPoint[] }) => {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis 
-                dataKey="time" 
-                axisLine={{ stroke: '#94a3b8' }} 
-                tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                label={{ value: '龄期 (d)', position: 'insideBottom', offset: -10, fontSize: 10, fontWeight: 800, fill: '#94a3b8' }}
-              />
-              <YAxis 
-                domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.3)]} 
-                axisLine={{ stroke: '#94a3b8' }} 
-                tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                label={{ value: '抗压强度 (MPa)', angle: -90, position: 'insideLeft', offset: 10, fontSize: 10, fontWeight: 800, fill: '#94a3b8' }}
-              />
+                <XAxis 
+                  dataKey="time" 
+                  axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                  tickLine={true} 
+                  tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                  label={{ value: '龄期 (d)', position: 'insideBottom', offset: -10, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                />
+                <YAxis 
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.3)]} 
+                  axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                  tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                  label={{ value: '抗压强度 (MPa)', angle: -90, position: 'insideLeft', offset: 15, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                />
               <Tooltip 
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontWeight: 800 }}
               />

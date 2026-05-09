@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { save } from '@tauri-apps/plugin-dialog';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, LabelList 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label, LabelList 
 } from 'recharts';
-import { Download, FileText, ArrowLeft, Save, Image as ImageIcon, CheckCircle2, Loader2, RefreshCcw } from 'lucide-react';
+import { FileText, ArrowLeft, Save, Image as ImageIcon, CheckCircle2, Loader2, RefreshCcw } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { toPng } from 'html-to-image';
 import { usePredictionStore } from '../../store/predictionStore';
@@ -26,7 +26,7 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
     .sort((a, b) => a.time - b.time)
     .map(r => ({
       '采样龄期 (d)': r.time,
-      '预测强度 (Mpa)': Number(r.strength.toFixed(2))
+      '预测强度 (MPa)': Number(r.strength.toFixed(2))
     }));
 
   const handleExportExcel = async () => {
@@ -109,8 +109,8 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
             <ArrowLeft size={20} className="text-slate-600" />
           </button>
           <div>
-            <h2 className="text-xl font-black text-slate-800 tracking-tight">耐久性预测结果</h2>
-            <p className="text-[11px] text-slate-400 font-medium tracking-wider">Evolution Analysis Summary</p>
+            <h2 className="text-xl font-black text-slate-900 tracking-tight">强度演化结果</h2>
+            <p className="text-[11px] text-slate-500 font-bold tracking-wider uppercase">Evolution Analysis Summary</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -197,7 +197,7 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
                   value={warningLevel}
                   onChange={(e) => setWarningLevel(Number(e.target.value))}
                 />
-                <span className="text-[11px] font-black text-orange-400 ml-2">Mpa</span>
+                <span className="text-[14px] font-black text-orange-600 ml-2">MPa</span>
               </div>
             </div>
           </div>
@@ -211,24 +211,24 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis 
                   dataKey="time" 
-                  axisLine={{ stroke: '#94a3b8', strokeWidth: 1 }} 
+                  axisLine={{ stroke: '#475569', strokeWidth: 2 }} 
                   tickLine={true} 
-                  tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                  label={{ value: '龄期 (d)', position: 'insideBottom', offset: -15, fontSize: 11, fontWeight: 800, fill: '#94a3b8' }}
+                  tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                  label={{ value: '龄期 (d)', position: 'insideBottom', offset: -15, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
                 />
                 <YAxis 
-                  domain={[0, (dataMax: number) => Math.max(60, Math.ceil(dataMax * 1.2))]} 
-                  axisLine={{ stroke: '#94a3b8', strokeWidth: 1 }} 
+                  domain={[0, (dataMax: any) => Math.max(60, Math.ceil((Number(dataMax) || 0) * 1.2))]} 
+                  axisLine={{ stroke: '#475569', strokeWidth: 2 }} 
                   tickLine={true} 
-                  tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                  label={{ value: '抗压强度 (Mpa)', angle: -90, position: 'insideLeft', offset: -10, fontSize: 11, fontWeight: 800, fill: '#94a3b8' }}
+                  tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                  label={{ value: '抗压强度 (MPa)', angle: -90, position: 'insideLeft', offset: -10, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
                 />
                 <Tooltip 
                   contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 800, padding: '12px 16px' }}
                   labelStyle={{ color: '#64748b', fontSize: '11px', marginBottom: '4px' }}
                 />
                 <ReferenceLine y={warningLevel} stroke="#f97316" strokeDasharray="6 6" strokeWidth={2}>
-                  <LabelList position="right" value={`设计警示线: ${warningLevel}Mpa`} fill="#f97316" fontSize={11} fontWeight={900} />
+                  <Label position="insideBottomRight" value={`设计警戒线: ${warningLevel} MPa`} fill="#f97316" fontSize={14} fontWeight={900} offset={10} />
                 </ReferenceLine>
                 <Line 
                   type="monotone" 
@@ -240,7 +240,7 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
                   activeDot={{ r: 9, strokeWidth: 0 }}
                   animationDuration={1500}
                 >
-                  <LabelList dataKey="strength" position="top" offset={18} style={{ fontSize: 12, fontWeight: 900, fill: '#10b981' }} />
+                  <LabelList dataKey="strength" position="top" offset={18} fontSize={12} fontWeight={900} fill="#10b981" />
                 </Line>
               </LineChart>
             </ResponsiveContainer>
@@ -263,7 +263,7 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
               <thead>
                 <tr className="bg-white border-b border-slate-50 sticky top-0 z-10">
                   <th className="px-8 py-4 text-[11px] font-black text-slate-400 tracking-widest">采样龄期 (d)</th>
-                  <th className="px-8 py-4 text-[11px] font-black text-brand-600 tracking-widest text-right">预测强度 (Mpa)</th>
+                  <th className="px-8 py-4 text-[11px] font-black text-brand-600 tracking-widest text-right">预测强度 (MPa)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -271,7 +271,7 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
                   <tr key={i} className="hover:bg-blue-50/50 transition-colors group">
                     <td className="px-8 py-4 text-sm font-bold text-slate-600">{r['采样龄期 (d)']} d</td>
                     <td className="px-8 py-4 text-sm font-black text-brand-600 text-right group-hover:scale-105 transition-transform origin-right">
-                      {r['预测强度 (Mpa)'].toFixed(2)} Mpa
+                      {r['预测强度 (MPa)'].toFixed(2)} MPa
                     </td>
                   </tr>
                 ))}

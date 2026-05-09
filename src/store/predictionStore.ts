@@ -41,6 +41,9 @@ export type PredictionData = {
   dryingTemp: number;
   loadFactor: number;
   isStressMode: boolean;
+  isDryWet: boolean;
+  stressLoad: number;
+  forceType: string;
 
   // Step 6: Time Points
   timePoints: number[];
@@ -49,11 +52,14 @@ export type PredictionData = {
 export type PredictionState = {
   step: number;
   predictionData: PredictionData;
-  lastResults: DataPoint[] | null; // Shared results for other modules
+  lastResults: DataPoint[] | null;
+  currentUser: { username: string, role: string, uuid: string } | null;
   setStep: (step: number) => void;
   updateData: (data: Partial<PredictionData>) => void;
   setLastResults: (results: DataPoint[]) => void;
   setField: <K extends keyof PredictionData>(field: K, value: PredictionData[K]) => void;
+  setCurrentUser: (user: { username: string, role: string, uuid: string } | null) => void;
+  logout: () => void;
 };
 
 export const usePredictionStore = create<PredictionState>((set) => ({
@@ -84,9 +90,13 @@ export const usePredictionStore = create<PredictionState>((set) => ({
     dryingTemp: 25,
     loadFactor: 0,
     isStressMode: false,
+    isDryWet: true,
+    stressLoad: 0,
+    forceType: '压力',
     timePoints: [0, 100, 200, 250, 300, 350, 400, 450, 500],
   },
   lastResults: null,
+  currentUser: null,
   setStep: (step) => set({ step }),
   setLastResults: (results) => set({ lastResults: results }),
   updateData: (data) => set((state) => ({
@@ -95,4 +105,6 @@ export const usePredictionStore = create<PredictionState>((set) => ({
   setField: (field, value) => set((state) => ({
     predictionData: { ...state.predictionData, [field]: value }
   })),
+  setCurrentUser: (user) => set({ currentUser: user }),
+  logout: () => set({ currentUser: null, step: 1 }),
 }));

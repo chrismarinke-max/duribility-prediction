@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Calculator, Hash } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const ScientificCalculator = () => {
   const [display, setDisplay] = useState('0');
@@ -193,7 +192,7 @@ const ScientificCalculator = () => {
 
          {/* Grid Area */}
          <div className={`flex-1 grid gap-4 transition-all duration-500 ${isScientific ? 'grid-cols-5' : 'grid-cols-4'}`}>
-            {(isScientific ? scientificButtons : standardButtons).map((btn, i) => (
+            {(isScientific ? scientificButtons : standardButtons).map((btn: any, i) => (
               <button
                 key={i}
                 onClick={btn.action}

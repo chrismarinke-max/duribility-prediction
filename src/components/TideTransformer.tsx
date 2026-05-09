@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Waves, Info, Layout, Clock, Activity, ArrowRight } from 'lucide-react';
+import { Waves, Info, Layout, Activity } from 'lucide-react';
 
 const TideTransformer = () => {
   // Inputs matching the old project (Tidetrans.cs)
@@ -14,9 +14,7 @@ const TideTransformer = () => {
 
   // Calculation Logic replicated from Tidetrans.cs:78-93
   const results = useMemo(() => {
-    const H_avg = (maxHeight + minHeight) / 2;
-    const Amplitude = (maxHeight - minHeight) / 2;
-    
+    // Calculation Logic
     if (pointHeight >= maxHeight) return { wet: 0, dry: cycleTime, ratio: '0 : 1' };
     if (pointHeight <= minHeight) return { wet: cycleTime, dry: 0, ratio: '1 : 0' };
 

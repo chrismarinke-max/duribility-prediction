@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Layers, RefreshCw, Zap } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Layers, Zap } from 'lucide-react';
 
 const SaltStressAnalysis = () => {
   const [ions, setIons] = useState({ na: 0.46, mg: 0.05, cl: 0.54, so4: 0.02 });

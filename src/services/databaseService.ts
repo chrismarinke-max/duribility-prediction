@@ -45,10 +45,29 @@ export const databaseService = {
   },
 
   /**
-   * Fetch all records for the browser
+   * Fetch records with pagination and optional search
    */
+  async fetchRecords(options: { limit?: number, offset?: number, search?: string, searchMode?: 'exact' | 'regex' } = {}): Promise<DatabaseRow[]> {
+    const { limit = 1000, offset = 0, search, searchMode = 'regex' } = options;
+    let sql = "SELECT * FROM data";
+    
+    if (search) {
+      const searchStr = search.replace(/'/g, "''");
+      if (searchMode === 'exact') {
+        // Simple exact search on all relevant columns (simplified for performance)
+        sql += ` WHERE title = '${searchStr}' OR author = '${searchStr}' OR cement = '${searchStr}'`;
+      } else {
+        // Regex search is handled by the frontend for now, but we'll use LIKE for basic backend filtering
+        sql += ` WHERE title LIKE '%${searchStr}%' OR author LIKE '%${searchStr}%' OR cement LIKE '%${searchStr}%'`;
+      }
+    }
+    
+    sql += ` ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`;
+    return this.query(sql);
+  },
+
   async fetchAllRecords(): Promise<DatabaseRow[]> {
-    return this.query("SELECT * FROM data ORDER BY id DESC");
+    return this.fetchRecords({ limit: 50000 }); // Reasonable limit for "All"
   },
 
   /**
@@ -78,6 +97,69 @@ export const databaseService = {
   },
 
   /**
+   * Add multiple records in a single transaction (Ported optimization)
+   */
+  async addRecordsBulk(rows: any[]): Promise<void> {
+    if (rows.length === 0) return;
+    console.info(`[DB] Adding ${rows.length} records in bulk`);
+    
+    const maxIdRes = await this.query("SELECT MAX(id) as maxId FROM data");
+    let currentId = parseInt(maxIdRes[0].maxId || '0');
+
+    // We build a single INSERT with multiple VALUES if possible, 
+    // or just run them in a batch if the backend supports it.
+    // Since query_db opens a new connection per call, we should build a large SQL.
+    
+    // SQLite limit for parameters is 999, but we are using string formatting.
+    // Let's chunk to 200 rows per query to avoid massive strings.
+    const chunk = 200;
+    for (let i = 0; i < rows.length; i += chunk) {
+      const batch = rows.slice(i, i + chunk);
+      let sql = "INSERT INTO data (id, cement, cementstrength, specimentype, specimenscale, wc, specificarea, sandratio, initialstrength, flyash, slag, silicafume, Na, Mg, Cl, SO4, wettingtime, wettingtemp, dryingtime, dryingtemp, cycle, degradationtime, finalstrength, source, title, journal, author, institute, time, jlcement) VALUES ";
+      
+      const valueLines = batch.map(row => {
+        currentId++;
+        const vals = [
+          currentId,
+          row.cement || 'P.I',
+          row.cementstrength || 42.5,
+          row.specimentype || '立方体',
+          row.specimenscale || '100*100*100',
+          row.wc || 0.4,
+          row.specificarea || 0.06,
+          row.sandratio || 35,
+          row.initialstrength || 45,
+          row.flyash || 0,
+          row.slag || 0,
+          row.silicafume || 0,
+          row.Na || 0,
+          row.Mg || 0,
+          row.Cl || 0,
+          row.SO4 || 0,
+          row.wettingtime || 24,
+          row.wettingtemp || 20,
+          row.dryingtime || 24,
+          row.dryingtemp || 20,
+          row.cycle || 1,
+          row.degradationtime || 365,
+          row.finalstrength || 40,
+          row.source || '文献',
+          row.title || '',
+          row.journal || '',
+          row.author || '',
+          row.institute || '',
+          row.time || '',
+          row.jlcement || 'A'
+        ].map(v => typeof v === 'string' ? `'${v.replace(/'/g, "''")}'` : v);
+        return `(${vals.join(', ')})`;
+      });
+      
+      sql += valueLines.join(', ');
+      await this.query(sql);
+    }
+  },
+
+  /**
    * Update an existing record
    */
   async updateRecord(id: string | number, data: any): Promise<void> {
@@ -97,11 +179,12 @@ export const databaseService = {
    */
   async checkDuplicatesBulk(rows: any[]): Promise<boolean[]> {
     console.info(`[DB] Bulk checking duplicates for ${rows.length} rows`);
-    // Fetch all unique keys from DB in one go to compare in-memory
-    const sql = `SELECT cementstrength, finalstrength, Na, Mg, Cl, degradationtime FROM data`;
+    // If rows are few, check individually or in small batches
+    // For now, let's keep the in-memory check but only fetch the last 2000 records 
+    // which is the most likely place for duplicates during import
+    const sql = `SELECT cementstrength, finalstrength, Na, Mg, Cl, degradationtime FROM data ORDER BY id DESC LIMIT 5000`;
     const dbRecords = await this.query(sql);
     
-    // Create a lookup set of strings
     const dbSet = new Set(dbRecords.map(r => 
       `${Number(r.cementstrength).toFixed(2)}|${Number(r.finalstrength).toFixed(2)}|${Number(r.Na).toFixed(2)}|${Number(r.Mg).toFixed(2)}|${Number(r.Cl).toFixed(2)}|${Number(r.degradationtime).toFixed(2)}`
     ));
@@ -371,5 +454,58 @@ export const databaseService = {
       console.error('[AI] Stress calculation failed', e);
       return 0;
     }
+  },
+  /**
+   * Initialize Users Table if not exists
+   */
+  async initUsers(): Promise<void> {
+    const createTableSql = `
+      CREATE TABLE IF NOT EXISTS users (
+        uuid TEXT PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      )
+    `;
+    await this.query(createTableSql);
+
+    // Check if admin exists
+    const adminCheck = await this.query("SELECT * FROM users WHERE username = 'admin'");
+    const now = new Date().toISOString().split('T')[0];
+    if (adminCheck.length === 0) {
+      await this.query(`INSERT INTO users (uuid, username, password, role, created_at) VALUES ('0001', 'admin', '123456', 'admin', '${now}')`);
+    } else {
+      // If admin exists and has the old default password, update it
+      await this.query("UPDATE users SET password = '123456' WHERE username = 'admin' AND password = 'admin123'");
+    }
+  },
+
+  async login(username: string, password: string, role: string): Promise<any> {
+    const results = await this.query(`SELECT * FROM users WHERE username = '${username}' AND password = '${password}' AND role = '${role}'`);
+    if (results.length > 0) return results[0];
+    throw new Error("用户名、密码或角色不正确");
+  },
+
+  async register(username: string, password: string): Promise<void> {
+    const check = await this.query(`SELECT * FROM users WHERE username = '${username}'`);
+    if (check.length > 0) throw new Error("用户名已存在");
+    
+    const uuid = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    const now = new Date().toISOString().split('T')[0];
+    await this.query(`INSERT INTO users (uuid, username, password, role, created_at) VALUES ('${uuid}', '${username}', '${password}', 'user', '${now}')`);
+  },
+
+  async getAllUsers(): Promise<any[]> {
+    return this.query("SELECT * FROM users ORDER BY uuid ASC");
+  },
+
+  async updateUserRole(uuid: string, role: string): Promise<void> {
+    await this.query(`UPDATE users SET role = '${role}' WHERE uuid = '${uuid}'`);
+  },
+
+  async deleteUser(uuid: string): Promise<void> {
+    if (uuid === '0001') throw new Error("初始管理员账户不可删除");
+    await this.query(`DELETE FROM users WHERE uuid = '${uuid}'`);
   }
 };

@@ -46,7 +46,7 @@ const CementClusterer = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-700 max-w-7xl mx-auto">
+    <div className="h-full flex flex-col space-y-6 animate-in fade-in duration-700 max-w-7xl mx-auto pt-12 px-8">
       {/* Header Area */}
       <div className="flex items-center justify-between shrink-0">
         <div className="flex items-center gap-5">
@@ -54,7 +54,7 @@ const CementClusterer = () => {
             <FlaskConical size={30} />
           </div>
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">CEMENT CLUSTERER 水泥特征码标定</h2>
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">水泥特征码</h2>
             <p className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
               <Calculator size={14} className="text-emerald-500" />
               KNN 近邻回归算法 (Standardized Cluster.cs)
@@ -109,7 +109,7 @@ const CementClusterer = () => {
             className="w-full h-20 mt-10 bg-emerald-600 text-white rounded-3xl font-black text-xl shadow-2xl shadow-emerald-200 hover:bg-emerald-500 hover:-translate-y-1 active:scale-[0.98] transition-all flex items-center justify-center gap-4 group"
           >
             <CheckCircle2 size={28} className="group-hover:scale-110 transition-transform" />
-            执行聚类分析引擎
+            执行特征码标定引擎
           </button>
         </div>
 
@@ -135,12 +135,12 @@ const CementClusterer = () => {
 
                <div className="space-y-3 px-8">
                  <p className="text-2xl font-black text-slate-900">
-                   {result ? `判别结果：${result.type} (Standard)` : '等待数据输入...'}
+                   {result ? `特征码：${result.type}` : '等待数据输入...'}
                  </p>
                  <p className="text-base text-slate-500 font-medium leading-relaxed">
                    {result 
-                    ? `根据欧氏距离矩阵算法，该配比特征在 6 维空间中最接近标准 ${result.type} 类水泥特征码。` 
-                    : '请输入各个矿物掺合料的百分比，点击下方按钮启动 KNN 聚类引擎。'}
+                    ? `根据欧氏距离矩阵算法，该配比在 6 维空间中最接近标准 ${result.type} 类水泥特征码。` 
+                    : '请输入各个矿物掺合料的百分比，点击下方按钮启动特征码标定引擎。'}
                  </p>
                </div>
              </div>

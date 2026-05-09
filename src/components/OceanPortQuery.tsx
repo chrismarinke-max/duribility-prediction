@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Search, MapPin, Globe, ChevronRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Search, Globe } from 'lucide-react';
 import portData from '../../src-tauri/assets/ports.json';
 
 interface PortInfo {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { X, Save, RotateCcw, Calculator, Layers, Beaker, Globe, BookOpen } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, type ChangeEvent } from 'react';
+import { X, Save, RotateCcw, Calculator, Layers, Beaker, BookOpen } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { databaseService } from '../../services/databaseService';
 
 interface DataEditorModalProps {
@@ -75,7 +75,7 @@ const DataEditorModal: React.FC<DataEditorModalProps> = ({ isOpen, onClose, onSa
       scale = `D=${d} H=${h}`;
     }
 
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       specificarea: vs.toFixed(4),
       specimenscale: scale,
@@ -83,10 +83,10 @@ const DataEditorModal: React.FC<DataEditorModalProps> = ({ isOpen, onClose, onSa
     }));
   }, [dims, specimenTab]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+     const { name, value } = e.target;
+     setFormData((prev: any) => ({ ...prev, [name]: value }));
+   };
 
   const handleSubmit = async () => {
     try {
@@ -144,13 +144,13 @@ const DataEditorModal: React.FC<DataEditorModalProps> = ({ isOpen, onClose, onSa
               </div>
               <div className="grid grid-cols-4 gap-6 bg-slate-50/50 p-6 rounded-[32px] border border-slate-100">
                 <Field label="水泥种类" name="cement" type="select" options={cementOptions} value={formData.cement} onChange={handleChange} />
-                <Field label="28d强度/Mpa" name="cementstrength" type="number" value={formData.cementstrength} onChange={handleChange} />
+                <Field label="28d强度/MPa" name="cementstrength" type="number" value={formData.cementstrength} onChange={handleChange} />
                 <Field label="水灰比" name="wc" type="number" value={formData.wc} onChange={handleChange} />
                 <Field label="砂率/%" name="sandratio" type="number" value={formData.sandratio} onChange={handleChange} />
                 <Field label="粉煤灰/%" name="flyash" type="number" value={formData.flyash} onChange={handleChange} />
                 <Field label="矿渣/%" name="slag" type="number" value={formData.slag} onChange={handleChange} />
                 <Field label="硅灰/%" name="silicafume" type="number" value={formData.silicafume} onChange={handleChange} />
-                <Field label="初始强度/Mpa" name="initialstrength" type="number" value={formData.initialstrength} onChange={handleChange} />
+                <Field label="初始强度/MPa" name="initialstrength" type="number" value={formData.initialstrength} onChange={handleChange} />
               </div>
             </div>
 
@@ -174,20 +174,20 @@ const DataEditorModal: React.FC<DataEditorModalProps> = ({ isOpen, onClose, onSa
                 </div>
                 
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  {specimenTab === '立方体' && (
-                    <Field label="边长(mm)" name="x" type="number" value={dims.x} onChange={(e) => setDims(p => ({ ...p, x: Number(e.target.value) }))} />
+                   {specimenTab === '立方体' && (
+                    <Field label="边长(mm)" name="x" type="number" value={dims.x} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, x: Number(e.target.value) }))} />
                   )}
                   {specimenTab === '长方体' && (
                     <>
-                      <Field label="长(mm)" name="x" type="number" value={dims.x} onChange={(e) => setDims(p => ({ ...p, x: Number(e.target.value) }))} />
-                      <Field label="宽(mm)" name="y" type="number" value={dims.y} onChange={(e) => setDims(p => ({ ...p, y: Number(e.target.value) }))} />
-                      <Field label="高(mm)" name="z" type="number" value={dims.z} onChange={(e) => setDims(p => ({ ...p, z: Number(e.target.value) }))} />
+                      <Field label="长(mm)" name="x" type="number" value={dims.x} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, x: Number(e.target.value) }))} />
+                      <Field label="宽(mm)" name="y" type="number" value={dims.y} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, y: Number(e.target.value) }))} />
+                      <Field label="高(mm)" name="z" type="number" value={dims.z} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, z: Number(e.target.value) }))} />
                     </>
                   )}
                   {specimenTab === '圆柱体' && (
                     <>
-                      <Field label="直径(mm)" name="d" type="number" value={dims.d} onChange={(e) => setDims(p => ({ ...p, d: Number(e.target.value) }))} />
-                      <Field label="高度(mm)" name="h" type="number" value={dims.h} onChange={(e) => setDims(p => ({ ...p, h: Number(e.target.value) }))} />
+                      <Field label="直径(mm)" name="d" type="number" value={dims.d} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, d: Number(e.target.value) }))} />
+                      <Field label="高度(mm)" name="h" type="number" value={dims.h} onChange={(e: ChangeEvent<HTMLInputElement>) => setDims((p: any) => ({ ...p, h: Number(e.target.value) }))} />
                     </>
                   )}
                 </div>
@@ -223,7 +223,7 @@ const DataEditorModal: React.FC<DataEditorModalProps> = ({ isOpen, onClose, onSa
                </div>
                 <div className="col-span-1 grid grid-cols-2 gap-6 bg-slate-50/50 p-6 rounded-[32px] border border-slate-100">
                    <Field label="劣化时间/d" name="degradationtime" type="number" value={formData.degradationtime} onChange={handleChange} />
-                   <Field label="劣化强度/Mpa" name="finalstrength" type="number" value={formData.finalstrength} onChange={handleChange} color="text-red-500" />
+                   <Field label="劣化强度/MPa" name="finalstrength" type="number" value={formData.finalstrength} onChange={handleChange} color="text-red-500" />
                 </div>
             </div>
 

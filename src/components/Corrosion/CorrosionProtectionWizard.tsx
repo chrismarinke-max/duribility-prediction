@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePredictionStore } from '../../store/predictionStore';
-import { Activity, ShieldCheck, Zap, ArrowLeft, ArrowRight, Info } from 'lucide-react';
+import { Activity, ShieldCheck, Zap, ArrowLeft, ArrowRight } from 'lucide-react';
 
 // Steps
 import Step1StrengthReview from './Step1StrengthReview';

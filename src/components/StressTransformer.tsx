@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { 
-  Zap, Info, Calculator, FlaskConical, Globe2, 
-  Clock, Activity, ArrowRight, RefreshCw, Layers
+  Zap, Info, Globe2, Clock, Layers, Calculator, RefreshCw, Activity, ArrowRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { databaseService } from '../services/databaseService';
@@ -52,8 +51,10 @@ const StressTransformer = () => {
                 (inputs.shape === 'rect' ? inputs.sideA * inputs.sideB * inputs.sideC : 
                  Math.PI * Math.pow(inputs.sideA/2, 2) * inputs.sideB);
       
+      const { na, cl, mg, so4, dryingTemp, wettingTime, dryingTime, strength, cycles } = inputs;
+      
       const val = databaseService.calculateStress({
-        ...inputs,
+        na, cl, mg, so4, dryingTemp, wettingTime, dryingTime, strength, cycles,
         vs: calculateVS,
         v: v
       });
@@ -93,7 +94,7 @@ const StressTransformer = () => {
                   { id: 'so4', label: 'SO₄²⁻ (mol/L)', icon: 'SO4' },
                 ].map(item => (
                   <div key={item.id} className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">{item.label}</label>
+                    <label className="text-[10px] font-black text-slate-400 tracking-widest px-1">{item.label}</label>
                     <input 
                       type="number" 
                       className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-lg font-black text-slate-900 focus:border-brand-500 outline-none transition-all"
@@ -112,7 +113,7 @@ const StressTransformer = () => {
                     />
                 </div>
                 <div className="col-span-2 space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">劣化前强度 (MPa)</label>
+                     <label className="text-[10px] font-black text-slate-400 tracking-widest px-1">劣化前强度 (MPa)</label>
                     <input 
                       type="number" 
                       className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3 px-4 text-lg font-black text-slate-900 focus:border-brand-500 outline-none transition-all"
@@ -219,12 +220,12 @@ const StressTransformer = () => {
 
         {/* Results */}
         <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-           <div className="bg-slate-900 rounded-[48px] p-10 text-white flex-1 flex flex-col shadow-2xl relative overflow-hidden group">
+           <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-brand-950 rounded-[48px] p-10 text-white flex-1 flex flex-col shadow-2xl relative overflow-hidden group border border-white/10">
               <div className="absolute top-0 right-0 p-10 opacity-[0.05] group-hover:scale-110 transition-transform duration-1000">
                 <Calculator size={200} />
               </div>
               
-              <h3 className="text-[10px] font-black text-brand-400 uppercase tracking-[0.3em] mb-10">Stress Result Output</h3>
+              <h3 className="text-[10px] font-black text-brand-400 uppercase tracking-[0.3em] mb-10">应力计算输出 (STRESS OUTPUT)</h3>
               
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                  <AnimatePresence mode="wait">
@@ -238,16 +239,18 @@ const StressTransformer = () => {
                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Solving Thermodynamics...</p>
                       </motion.div>
                     ) : result !== null ? (
-                      <motion.div 
+                       <motion.div 
                         key="result"
                         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                        className="space-y-2"
+                        className="flex flex-col items-center"
                       >
-                         <span className="text-7xl font-black italic tracking-tighter bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent">
-                            {result}
-                         </span>
-                         <span className="text-xl font-black text-brand-500 ml-2">MPa</span>
-                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-4">结晶压力 (Crystallization Pressure)</p>
+                         <div className="flex items-baseline justify-center gap-3 mb-2">
+                           <span className="text-6xl font-black italic tracking-tight bg-gradient-to-br from-white to-slate-300 bg-clip-text text-transparent px-2">
+                              {result}
+                           </span>
+                           <span className="text-2xl font-black text-brand-500">MPa</span>
+                         </div>
+                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-2">结晶压力 (Crystallization Pressure)</p>
                       </motion.div>
                     ) : (
                       <div className="text-slate-700 text-center px-10">
@@ -263,7 +266,7 @@ const StressTransformer = () => {
                 disabled={loading}
                 className="mt-auto w-full py-5 bg-brand-600 text-white rounded-3xl font-black text-xs hover:bg-brand-700 transition-all shadow-xl shadow-brand-900 flex items-center justify-center gap-3 uppercase tracking-widest group"
               >
-                {loading ? 'CALCULATING...' : 'Start Transformation'}
+                {loading ? '正在计算...' : '开始转化'}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
            </div>

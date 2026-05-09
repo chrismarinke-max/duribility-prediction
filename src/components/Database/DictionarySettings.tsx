@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
-  Settings2, Plus, Trash2, Edit3, FlaskConical, 
-  Database, Info, Search, Save, X, ChevronRight, Hash, RefreshCw, Box
+  Settings2, Plus, Trash2, FlaskConical, 
+  Database, Info, RefreshCw, Box, Hash
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { databaseService } from '../../services/databaseService';

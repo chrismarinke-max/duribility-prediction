@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { invoke } from '@tauri-apps/api/core';
 import { 
-  FileUp, FileDown, Play, CheckCircle2, AlertCircle, 
-  Table as TableIcon, Download, RefreshCcw, Database, Search
+  FileUp, FileDown, Play, CheckCircle2, 
+  Table as TableIcon, Download, Database, RefreshCcw
 } from 'lucide-react';
 
 interface PredictionRow {

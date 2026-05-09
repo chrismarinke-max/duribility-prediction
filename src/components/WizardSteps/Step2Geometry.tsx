@@ -197,7 +197,7 @@ const Step2Geometry = () => {
               </div>
               <div className="max-w-[280px]">
                 <h3 className="text-2xl font-black text-orange-600 tracking-tight leading-tight mb-2">
-                  初始抗压强度基准 (Mpa)
+                  初始抗压强度基准 (MPa)
                 </h3>
                 <p className="text-sm font-bold text-slate-400 leading-tight">
                   Baseline Strength before exposure
@@ -211,11 +211,11 @@ const Step2Geometry = () => {
                 <input 
                   type="text"
                   inputMode="decimal"
-                  className="w-full bg-transparent text-8xl font-black text-slate-900 text-center outline-none border-b-4 border-orange-100 focus:border-orange-500 transition-all py-2 pr-20"
+                  className="w-full bg-transparent text-4xl font-black text-slate-900 text-center outline-none border-b-4 border-orange-100 focus:border-orange-500 transition-all py-2 pr-20"
                   value={predictionData.initialStrength ?? 45}
                   onChange={(e) => updateData({ initialStrength: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                 />
-                <span className="absolute right-0 bottom-8 text-4xl font-black text-slate-300 italic">Mpa</span>
+                <span className="absolute right-0 bottom-8 text-2xl font-black text-slate-300 italic">MPa</span>
               </div>
             </div>
 

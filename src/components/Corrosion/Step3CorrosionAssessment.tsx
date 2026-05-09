@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, LabelList 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label 
 } from 'recharts';
 import { Settings, FileText, ImageIcon, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react';
 import type { DataPoint } from '../../store/predictionStore';
@@ -15,6 +15,7 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
   const [c0, setC0] = useState(0.05);
   const [cs, setCs] = useState(0.5);
   const [x, setX] = useState(50.0);
+  const [warningLevel, setWarningLevel] = useState(0.6);
   const [showWarning, setShowWarning] = useState(false);
   
   const [exportState, setExportState] = useState<'idle' | 'processing' | 'success'>('idle');
@@ -103,13 +104,29 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
       <div ref={chartRef} className="bg-white border border-slate-100 rounded-2xl p-8 shadow-sm relative">
         <div className="flex items-center justify-between mb-8">
           <span className="text-xs font-black text-brand-600 uppercase tracking-widest">C(x, t) / %</span>
-          <button 
-            onClick={() => setShowWarning(!showWarning)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-black transition-all ${showWarning ? 'bg-red-500 text-white shadow-lg shadow-red-100' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-          >
-            {showWarning ? <EyeOff size={14} /> : <Eye size={14} />}
-            {showWarning ? '隐藏警戒线' : '显示 C=0.6 警戒线'}
-          </button>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setShowWarning(!showWarning)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black transition-all ${showWarning ? 'bg-red-500 text-white shadow-lg shadow-red-100' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+            >
+              {showWarning ? <EyeOff size={14} /> : <Eye size={14} />}
+              {showWarning ? '隐藏警戒线' : '显示警戒线'}
+            </button>
+
+            <div className={`px-6 py-3 rounded-2xl flex items-center gap-6 shadow-sm transition-all border ${showWarning ? 'bg-red-50 border-red-100 opacity-100' : 'bg-slate-50 border-slate-100 opacity-50'}`}>
+              <span className={`text-[11px] font-black tracking-widest uppercase ${showWarning ? 'text-red-600' : 'text-slate-400'}`}>临界浓度警戒值</span>
+              <div className="relative flex items-center">
+                <input 
+                  type="number" step="0.1"
+                  disabled={!showWarning}
+                  className={`w-16 bg-transparent text-2xl font-black tracking-tighter border-b-2 outline-none text-center transition-all ${showWarning ? 'text-red-600 border-red-200 focus:border-red-500' : 'text-slate-300 border-slate-100'}`}
+                  value={warningLevel}
+                  onChange={(e) => setWarningLevel(Number(e.target.value))}
+                />
+                <span className={`text-[14px] font-black ml-2 ${showWarning ? 'text-red-600' : 'text-slate-300'}`}>%</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="h-[350px] w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -117,20 +134,24 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis 
                 dataKey="time" 
-                axisLine={{ stroke: '#94a3b8' }} 
-                tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
-                label={{ value: '时间 t / d', position: 'insideBottom', offset: -10, fontSize: 12, fontWeight: 700, fill: '#94a3b8' }}
+                axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                tickLine={true}
+                tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
+                label={{ value: '时间 t / d', position: 'insideBottom', offset: -10, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
               />
               <YAxis 
-                // CRITICAL FIX: Ensure 0.6 is visible when showWarning is true
-                domain={showWarning ? [0, 0.7] : ['auto', 'auto']}
-                axisLine={{ stroke: '#94a3b8' }} 
-                tick={{ fontSize: 11, fontWeight: 700, fill: '#64748b' }}
+                domain={showWarning 
+                  ? [(dataMin: number) => Math.min(dataMin, warningLevel) * 0.8, (dataMax: number) => Math.max(dataMax, warningLevel) * 1.2] 
+                  : [(dataMin: number) => dataMin * 0.98, (dataMax: number) => dataMax * 1.02]
+                }
+                axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
+                tickLine={true}
+                tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
               />
               <Tooltip contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)', fontWeight: 800 }} />
-              {showWarning && (
-                <ReferenceLine y={0.6} stroke="#ef4444" strokeDasharray="6 6" strokeWidth={2}>
-                  <LabelList position="top" value="临界浓度: 0.6%" fill="#ef4444" fontSize={11} fontWeight={900} offset={10} />
+              {showWarning && warningLevel > 0 && (
+                <ReferenceLine y={warningLevel} stroke="#ef4444" strokeDasharray="6 6" strokeWidth={3}>
+                  <Label value={`临界浓度: ${warningLevel}%`} position="insideTopRight" fill="#ef4444" fontSize={14} fontWeight={900} offset={10} />
                 </ReferenceLine>
               )}
               <Line 
@@ -138,6 +159,7 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
                 dataKey="concentration" 
                 stroke="#10b981" 
                 strokeWidth={5} 
+                connectNulls={true}
                 dot={{ r: 6, fill: '#10b981', stroke: '#fff', strokeWidth: 3 }}
                 animationDuration={1500}
               />

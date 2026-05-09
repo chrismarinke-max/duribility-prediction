@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
-import { Anchor, Database, Droplets, MapPin, Waves, Sun, Activity, Zap, Wind } from 'lucide-react';
+import { Anchor, Droplets, MapPin, Waves, Sun } from 'lucide-react';
 import portsData from '../../assets/config/ports.json';
 
 const Step4Environment = () => {
@@ -149,14 +149,14 @@ const Step4Environment = () => {
                 <Droplets className="mb-6 opacity-60 shrink-0" size={40} />
                 <h4 className="text-xl font-black tracking-[0.1em] mb-4 shrink-0">湿润阶段</h4>
                 
-                <div className="space-y-8 mt-auto">
+                <div className="space-y-4 mt-6">
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">时长 (h)</label>
                     <div className="flex items-baseline gap-3">
                       <input 
                         type="text"
                         inputMode="decimal"
-                        className="w-full bg-transparent text-6xl font-black outline-none border-b-4 border-white/20 focus:border-white transition-all py-1"
+                        className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.wettingTime ?? 12}
                         onChange={(e) => updateData({ wettingTime: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                       />
@@ -168,7 +168,7 @@ const Step4Environment = () => {
                       <input 
                         type="text"
                         inputMode="decimal"
-                        className="w-full bg-transparent text-6xl font-black outline-none border-b-4 border-white/20 focus:border-white transition-all py-1"
+                        className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.wettingTemp ?? 25}
                         onChange={(e) => updateData({ wettingTemp: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                       />
@@ -187,7 +187,7 @@ const Step4Environment = () => {
                 <Sun className={`mb-6 ${predictionData.isDryWet ? 'opacity-60' : 'opacity-20'} shrink-0`} size={40} />
                 <h4 className="text-xl font-black tracking-[0.1em] mb-4 shrink-0">干燥阶段</h4>
                 
-                <div className="space-y-8 mt-auto">
+                <div className="space-y-4 mt-6">
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">时长 (h)</label>
                     <div className="flex items-baseline gap-3">
@@ -195,7 +195,7 @@ const Step4Environment = () => {
                         type="text"
                         inputMode="decimal"
                         disabled={!predictionData.isDryWet}
-                        className="w-full bg-transparent text-6xl font-black outline-none border-b-4 border-white/20 focus:border-white transition-all py-1"
+                        className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.isDryWet ? (predictionData.dryingTime ?? 12) : 0}
                         onChange={(e) => updateData({ dryingTime: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                       />
@@ -208,7 +208,7 @@ const Step4Environment = () => {
                         type="text"
                         inputMode="decimal"
                         disabled={!predictionData.isDryWet}
-                        className="w-full bg-transparent text-6xl font-black outline-none border-b-4 border-white/20 focus:border-white transition-all py-1"
+                        className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.isDryWet ? (predictionData.dryingTemp ?? 25) : 0}
                         onChange={(e) => updateData({ dryingTemp: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
                       />
