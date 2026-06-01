@@ -3,6 +3,7 @@ import { usePredictionStore } from '../../store/predictionStore';
 import { Beaker, Calculator, X, FlaskConical, CheckCircle2, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clusterCement } from '../../utils/math/scientific_utils';
+import DecimalInput from '../common/DecimalInput';
 
 const cementTypes = [
   { id: 0, name: '自定义水泥（触发聚类分析）', category: '?', categoryId: 0 },
@@ -130,12 +131,10 @@ const Step1Materials = () => {
                   {item.label}
                 </label>
                 <div className="relative">
-                  <input 
-                    type="text" 
-                    inputMode="decimal"
+                  <DecimalInput
                     className="w-full h-12 px-5 input-standard text-center text-2xl font-black rounded-xl"
                     value={(predictionData as any)[item.key] ?? 0}
-                    onChange={(e) => updateData({ [item.key]: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                    onValueChange={(value) => updateData({ [item.key]: value })}
                   />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">%</span>
                 </div>
@@ -151,12 +150,10 @@ const Step1Materials = () => {
             <div className="space-y-3">
               <label className="text-base font-black text-slate-900 px-1">水泥强度 (28d)</label>
               <div className="relative">
-                <input 
-                  type="text" 
-                  inputMode="decimal"
+                <DecimalInput
                   className="w-full h-16 px-6 input-standard text-4xl font-black text-brand-600 rounded-xl"
                   value={predictionData.cementStrength ?? 42.5}
-                  onChange={(e) => updateData({ cementStrength: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                  onValueChange={(value) => updateData({ cementStrength: value })}
                 />
                 <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">MPa</span>
               </div>
@@ -165,12 +162,10 @@ const Step1Materials = () => {
             <div className="space-y-3">
               <label className="text-base font-black text-slate-900 px-1">水灰比 (w/c Ratio)</label>
               <div className="relative">
-                <input 
-                  type="text" 
-                  inputMode="decimal"
+                <DecimalInput
                   className="w-full h-16 px-6 input-standard text-4xl font-black text-brand-600 rounded-xl"
                   value={predictionData.wc ?? 0.4}
-                  onChange={(e) => updateData({ wc: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                  onValueChange={(value) => updateData({ wc: value })}
                 />
               </div>
             </div>
@@ -220,11 +215,10 @@ const Step1Materials = () => {
                   ].map(item => (
                     <div key={item.key} className="space-y-2">
                       <label className="text-xs font-black text-slate-500 tracking-widest px-1">{item.label}</label>
-                      <input 
-                        type="text" 
+                      <DecimalInput
                         className="w-full h-12 px-5 input-standard text-center text-lg font-bold rounded-xl"
                         value={(localAdmixtures as any)[item.key]}
-                        onChange={(e) => setLocalAdmixtures({...localAdmixtures, [item.key]: Number(e.target.value.replace(/[^0-9.]/g, ''))})}
+                        onValueChange={(value) => setLocalAdmixtures({...localAdmixtures, [item.key]: value})}
                       />
                     </div>
                   ))}

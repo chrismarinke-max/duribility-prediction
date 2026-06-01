@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
 import { Anchor, Droplets, MapPin, Waves, Sun } from 'lucide-react';
 import portsData from '../../assets/config/ports.json';
+import DecimalInput from '../common/DecimalInput';
 
 const Step4Environment = () => {
   const { predictionData, updateData } = usePredictionStore();
@@ -98,12 +99,10 @@ const Step4Environment = () => {
                 <div key={ion.key} className="bg-slate-50/80 p-4 rounded-[24px] border border-slate-100 group/ion hover:border-blue-300 transition-all flex flex-col justify-center">
                   <label className="text-base font-black text-slate-800 tracking-tight mb-2 block px-1 group-hover/ion:text-blue-600">{ion.label}</label>
                   <div className="relative">
-                    <input 
-                      type="text"
-                      inputMode="decimal"
+                    <DecimalInput
                       className="w-full bg-transparent text-3xl font-black text-slate-900 outline-none"
                       value={(predictionData as any)[ion.key] ?? 0}
-                      onChange={(e) => updateData({ [ion.key]: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                      onValueChange={(value) => updateData({ [ion.key]: value })}
                     />
                     <span className="absolute right-0 bottom-1 text-xs font-black text-slate-400 italic">mol/l</span>
                   </div>
@@ -153,24 +152,20 @@ const Step4Environment = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">时长 (h)</label>
                     <div className="flex items-baseline gap-3">
-                      <input 
-                        type="text"
-                        inputMode="decimal"
+                      <DecimalInput
                         className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.wettingTime ?? 12}
-                        onChange={(e) => updateData({ wettingTime: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                        onValueChange={(value) => updateData({ wettingTime: value })}
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">温度 (℃)</label>
                     <div className="flex items-baseline gap-3">
-                      <input 
-                        type="text"
-                        inputMode="decimal"
+                      <DecimalInput
                         className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.wettingTemp ?? 25}
-                        onChange={(e) => updateData({ wettingTemp: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                        onValueChange={(value) => updateData({ wettingTemp: value })}
                       />
                     </div>
                   </div>
@@ -191,26 +186,22 @@ const Step4Environment = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">时长 (h)</label>
                     <div className="flex items-baseline gap-3">
-                      <input 
-                        type="text"
-                        inputMode="decimal"
+                      <DecimalInput
                         disabled={!predictionData.isDryWet}
                         className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.isDryWet ? (predictionData.dryingTime ?? 12) : 0}
-                        onChange={(e) => updateData({ dryingTime: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                        onValueChange={(value) => updateData({ dryingTime: value })}
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-black opacity-60 tracking-widest">温度 (℃)</label>
                     <div className="flex items-baseline gap-3">
-                      <input 
-                        type="text"
-                        inputMode="decimal"
+                      <DecimalInput
                         disabled={!predictionData.isDryWet}
                         className="w-full bg-transparent text-4xl font-black outline-none border-b-2 border-white/20 focus:border-white transition-all py-1"
                         value={predictionData.isDryWet ? (predictionData.dryingTemp ?? 25) : 0}
-                        onChange={(e) => updateData({ dryingTemp: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                        onValueChange={(value) => updateData({ dryingTemp: value })}
                       />
                     </div>
                   </div>

@@ -1,7 +1,7 @@
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
-import { Zap, Calculator } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import type { DataPoint } from '../../store/predictionStore';
 import { calculateDiffusionCoefficient } from '../../utils/math/corrosionUtils';
 
@@ -34,17 +34,7 @@ const Step2DiffusionEvolution = ({ results }: { results: DataPoint[] }) => {
           </div>
         </div>
 
-        <div className="flex gap-2">
-           <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
-              <div className="p-2 bg-white rounded-xl shadow-sm">
-                <Calculator size={16} className="text-brand-600" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">模型参数 B</p>
-                <p className="text-sm font-black text-slate-700">10.0 (固定)</p>
-              </div>
-           </div>
-        </div>
+
       </div>
 
       {/* Main Evolution Chart */}

@@ -1,18 +1,18 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "durability-prediction-sys",
+  "productName": "MCEDP",
   "version": "0.1.0",
   "identifier": "com.durability.prediction",
   "build": {
     "frontendDist": "../dist",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "http://localhost:1420",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
   "app": {
     "windows": [
       {
-        "title": "混凝土耐久性预测系统",
+        "title": "海洋环境混凝土抗压强度演化数据管理及耐久性预测系统",
         "width": 1280,
         "height": 800,
         "resizable": true,

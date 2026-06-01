@@ -225,7 +225,6 @@ const StressTransformer = () => {
                 <Calculator size={200} />
               </div>
               
-              <h3 className="text-[10px] font-black text-brand-400 uppercase tracking-[0.3em] mb-10">应力计算输出 (STRESS OUTPUT)</h3>
               
               <div className="flex-1 flex flex-col items-center justify-center text-center">
                  <AnimatePresence mode="wait">
@@ -266,7 +265,7 @@ const StressTransformer = () => {
                 disabled={loading}
                 className="mt-auto w-full py-5 bg-brand-600 text-white rounded-3xl font-black text-xs hover:bg-brand-700 transition-all shadow-xl shadow-brand-900 flex items-center justify-center gap-3 uppercase tracking-widest group"
               >
-                {loading ? '正在计算...' : '开始转化'}
+                {loading ? '正在计算...' : '开始计算'}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
            </div>

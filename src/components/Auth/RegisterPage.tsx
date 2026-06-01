@@ -37,7 +37,7 @@ const RegisterPage = ({ onBack }: RegisterPageProps) => {
 
   if (success) {
     return (
-      <div className="fixed inset-0 bg-[#f0f2f5] flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_12%,#dbeafe_0,#eef4fb_34%,#e7ebf0_100%)] flex items-center justify-center p-4">
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           className="bg-white p-12 rounded-[48px] shadow-2xl flex flex-col items-center text-center max-w-[400px]"
@@ -53,16 +53,17 @@ const RegisterPage = ({ onBack }: RegisterPageProps) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#f0f2f5] flex items-center justify-center p-4 overflow-hidden font-['Inter',_sans-serif]">
-      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-100/50 rounded-full blur-[120px]" />
+    <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_12%,#dbeafe_0,#eef4fb_34%,#e7ebf0_100%)] flex items-center justify-center p-4 overflow-hidden font-['Inter',_sans-serif]">
+      <div className="absolute inset-x-0 top-0 h-32 bg-white/45 backdrop-blur-2xl" />
+      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-emerald-100/55 rounded-full blur-[120px]" />
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative bg-white w-full max-w-[480px] rounded-[48px] shadow-2xl border border-white/20 overflow-hidden"
+        className="relative bg-white w-full max-w-[480px] rounded-[44px] shadow-[0_34px_90px_-30px_rgba(15,23,42,0.42)] border border-slate-200/80 overflow-hidden"
       >
-        <div className="p-12 pb-8 flex flex-col items-center text-center">
-           <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-100 mb-6">
+        <div className="p-12 pb-8 flex flex-col items-center text-center bg-gradient-to-b from-white to-slate-50/60">
+           <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-[0_18px_35px_-16px_rgba(5,150,105,0.8)] ring-1 ring-emerald-300 mb-6">
               <Activity size={32} className="text-white" />
            </div>
            <h1 className="text-2xl font-black text-slate-900 tracking-tight">创建新账户</h1>
@@ -72,32 +73,32 @@ const RegisterPage = ({ onBack }: RegisterPageProps) => {
         <form onSubmit={handleRegister} className="px-12 pb-12 space-y-5">
           <div className="space-y-3">
             <div className="relative group">
-              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-600 transition-colors">
-                <User size={18} />
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-600 transition-colors">
+                <User size={20} strokeWidth={2.4} />
               </div>
               <input 
                 type="text" placeholder="用户名" value={username} onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all"
+                className="w-full h-[60px] pl-14 pr-6 bg-white border-2 border-slate-300 rounded-2xl text-base font-black text-slate-900 placeholder:text-slate-500 outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.04),0_8px_20px_-18px_rgba(15,23,42,0.8)] hover:border-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100/80 transition-all"
                 required
               />
             </div>
             <div className="relative group">
-              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-600 transition-colors">
-                <Lock size={18} />
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-600 transition-colors">
+                <Lock size={20} strokeWidth={2.4} />
               </div>
               <input 
                 type="password" placeholder="设置密码" value={password} onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all"
+                className="w-full h-[60px] pl-14 pr-6 bg-white border-2 border-slate-300 rounded-2xl text-base font-black text-slate-900 placeholder:text-slate-500 outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.04),0_8px_20px_-18px_rgba(15,23,42,0.8)] hover:border-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100/80 transition-all"
                 required
               />
             </div>
             <div className="relative group">
-              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-600 transition-colors">
-                <Lock size={18} />
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-600 transition-colors">
+                <Lock size={20} strokeWidth={2.4} />
               </div>
               <input 
                 type="password" placeholder="确认密码" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold text-slate-700 outline-none focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50 transition-all"
+                className="w-full h-[60px] pl-14 pr-6 bg-white border-2 border-slate-300 rounded-2xl text-base font-black text-slate-900 placeholder:text-slate-500 outline-none shadow-[inset_0_2px_5px_rgba(15,23,42,0.04),0_8px_20px_-18px_rgba(15,23,42,0.8)] hover:border-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100/80 transition-all"
                 required
               />
             </div>
@@ -107,14 +108,14 @@ const RegisterPage = ({ onBack }: RegisterPageProps) => {
 
           <button 
             type="submit" disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-4 bg-emerald-500 text-white rounded-2xl font-black text-sm hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-100 disabled:opacity-50"
+            className="w-full h-14 flex items-center justify-center gap-3 bg-emerald-600 text-white rounded-2xl font-black text-base hover:bg-emerald-700 active:scale-[0.98] transition-all shadow-[0_18px_34px_-18px_rgba(5,150,105,0.95)] border border-emerald-500 disabled:opacity-50"
           >
             {loading ? '注册中...' : '确认注册'}
           </button>
 
           <button 
             type="button" onClick={onBack}
-            className="w-full text-center text-xs font-black text-slate-400 hover:text-slate-600 transition-all py-2"
+            className="w-full h-12 rounded-2xl border-2 border-slate-300 bg-white text-center text-sm font-black text-slate-700 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 active:scale-[0.98] transition-all"
           >
             返回登录
           </button>

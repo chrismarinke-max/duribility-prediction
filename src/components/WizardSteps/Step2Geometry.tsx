@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
 import { Box, Layers, Database, Ruler, ShieldCheck } from 'lucide-react';
+import DecimalInput from '../common/DecimalInput';
 
 const Step2Geometry = () => {
   const { predictionData, updateData } = usePredictionStore();
@@ -119,12 +120,10 @@ const Step2Geometry = () => {
                   {selectedType === 'cube' && (
                     <div className="space-y-3 col-span-3">
                       <label className="text-sm font-black text-slate-500 px-1">边长 L</label>
-                      <input 
-                        type="text"
-                        inputMode="decimal"
+                      <DecimalInput
                         className="w-full h-14 px-6 input-standard text-2xl font-black rounded-xl"
                         value={dims.l}
-                        onChange={(e) => setDims({ ...dims, l: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                        onValueChange={(value) => setDims({ ...dims, l: value })}
                       />
                     </div>
                   )}
@@ -132,12 +131,10 @@ const Step2Geometry = () => {
                     ['l', 'w', 'h'].map((k) => (
                       <div key={k} className="space-y-3">
                         <label className="text-sm font-black text-slate-500 px-1">{k === 'l' ? '长度 L' : k === 'w' ? '宽度 W' : '高度 H'}</label>
-                        <input 
-                          type="text"
-                          inputMode="decimal"
+                        <DecimalInput
                           className="w-full h-14 px-6 input-standard text-2xl font-black rounded-xl"
                           value={(dims as any)[k]}
-                          onChange={(e) => setDims({ ...dims, [k]: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                          onValueChange={(value) => setDims({ ...dims, [k]: value })}
                         />
                       </div>
                     ))
@@ -146,22 +143,18 @@ const Step2Geometry = () => {
                     <>
                       <div className="space-y-3 col-span-1">
                         <label className="text-sm font-black text-slate-500 px-1">直径 D</label>
-                        <input 
-                          type="text"
-                          inputMode="decimal"
+                        <DecimalInput
                           className="w-full h-14 px-6 input-standard text-2xl font-black rounded-xl"
                           value={dims.r}
-                          onChange={(e) => setDims({ ...dims, r: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                          onValueChange={(value) => setDims({ ...dims, r: value })}
                         />
                       </div>
                       <div className="space-y-3 col-span-2">
                         <label className="text-sm font-black text-slate-500 px-1">高度 H</label>
-                        <input 
-                          type="text"
-                          inputMode="decimal"
+                        <DecimalInput
                           className="w-full h-14 px-6 input-standard text-2xl font-black rounded-xl"
                           value={dims.h}
-                          onChange={(e) => setDims({ ...dims, h: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                          onValueChange={(value) => setDims({ ...dims, h: value })}
                         />
                       </div>
                     </>
@@ -208,12 +201,10 @@ const Step2Geometry = () => {
             {/* Center Input */}
             <div className="flex-1 flex items-center justify-center z-10 min-h-0">
               <div className="relative w-full max-w-[360px]">
-                <input 
-                  type="text"
-                  inputMode="decimal"
+                <DecimalInput
                   className="w-full bg-transparent text-4xl font-black text-slate-900 text-center outline-none border-b-4 border-orange-100 focus:border-orange-500 transition-all py-2 pr-20"
                   value={predictionData.initialStrength ?? 45}
-                  onChange={(e) => updateData({ initialStrength: Number(e.target.value.replace(/[^0-9.]/g, '')) })}
+                  onValueChange={(value) => updateData({ initialStrength: value })}
                 />
                 <span className="absolute right-0 bottom-8 text-2xl font-black text-slate-300 italic">MPa</span>
               </div>

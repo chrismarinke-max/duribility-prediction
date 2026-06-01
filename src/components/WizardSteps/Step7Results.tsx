@@ -8,6 +8,7 @@ import { FileText, ArrowLeft, Save, Image as ImageIcon, CheckCircle2, Loader2, R
 import * as XLSX from 'xlsx';
 import { toPng } from 'html-to-image';
 import { usePredictionStore } from '../../store/predictionStore';
+import DecimalInput from '../common/DecimalInput';
 
 interface PredictionResult {
   time: number;
@@ -191,11 +192,10 @@ const Step7Results = ({ results, onBack }: { results: PredictionResult[], onBack
             <div className="px-6 py-3 bg-orange-50 border border-orange-100 rounded-2xl flex items-center gap-6 shadow-sm group">
               <span className="text-[11px] font-black text-orange-600 tracking-widest">设计强度警戒线</span>
               <div className="relative flex items-center">
-                <input 
-                  type="number"
+                <DecimalInput
                   className="w-16 bg-transparent text-2xl font-black text-orange-600 tracking-tighter border-b-2 border-orange-200 focus:border-orange-500 outline-none text-center"
                   value={warningLevel}
-                  onChange={(e) => setWarningLevel(Number(e.target.value))}
+                  onValueChange={setWarningLevel}
                 />
                 <span className="text-[14px] font-black text-orange-600 ml-2">MPa</span>
               </div>

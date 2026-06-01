@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePredictionStore } from '../../store/predictionStore';
 import { Clock, Zap, Cpu, ShieldAlert } from 'lucide-react';
+import DecimalInput from '../common/DecimalInput';
 
 const Step6Time = () => {
   const { predictionData, updateData } = usePredictionStore();
@@ -136,14 +137,12 @@ const Step6Time = () => {
             <div className="space-y-3 shrink-0">
               <label className="text-sm font-black text-slate-500 px-1">外加荷载强度 (kN)</label>
               <div className="relative">
-                <input 
-                  type="text" 
-                  inputMode="decimal"
+                <DecimalInput
                   className={`w-full bg-slate-50/50 text-4xl font-black py-5 px-10 border-2 rounded-[32px] transition-all outline-none text-right pr-24 ${
                     isOverloaded ? 'border-red-500 text-red-600' : 'border-slate-100 focus:border-brand-500 text-slate-900'
                   }`}
                   value={loadKn}
-                  onChange={(e) => setLoadKn(Number(e.target.value.replace(/[^0-9.]/g, '')))}
+                  onValueChange={setLoadKn}
                 />
                 <span className="absolute right-10 bottom-10 text-3xl font-black text-slate-300 italic">kN</span>
               </div>

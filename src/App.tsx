@@ -12,13 +12,12 @@ import {
   Beaker,
   Map,
   Waves,
-  RefreshCcw,
   ClipboardList,
   Play,
   Settings
 } from 'lucide-react';
-import heroImage from './assets/hero.png';
 import homeBg from './assets/home_bg.png';
+import logoImg from './assets/logo.png';
 
 // Components
 import Step1Materials from './components/WizardSteps/Step1Materials';
@@ -42,21 +41,33 @@ import DictionarySettings from './components/Database/DictionarySettings';
 import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
 import SystemSettings from './components/SystemSettings';
+import AIReader from './components/AIReader';
 
 import { executeInference } from './services/predictionService';
 import { usePredictionStore } from './store/predictionStore';
 import { databaseService } from './services/databaseService';
 
+import { useAIReaderStore } from './store/aiReaderStore';
+import { listen } from '@tauri-apps/api/event';
+
 const App = () => {
    const [activeView, setActiveView] = useState('dashboard');
    const { step, setStep, predictionData, setLastResults, lastResults, currentUser } = usePredictionStore();
+   const { processLogEvent } = useAIReaderStore();
    const [loading, setLoading] = useState(false);
    const [openSections, setOpenSections] = useState<string[]>(['CORE', 'TOOLS', 'DATA']);
    const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
    useEffect(() => {
      databaseService.initUsers().catch(console.error);
-   }, []);
+     
+     // Global listener for AI extraction logs
+     const unlisten = listen<string>('extraction-progress', (event) => {
+       processLogEvent(event.payload);
+     });
+     
+     return () => { unlisten.then(f => f()); };
+   }, [processLogEvent]);
 
    const toggleSection = (id: string) => {
      setOpenSections(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -83,7 +94,7 @@ const App = () => {
       children: [
         { id: 'ocean-query', label: '海线/港口查询与离子', icon: Map },
         { id: 'tide-trans', label: '海洋潮汐转化为干湿循环', icon: Waves },
-        { id: 'stress-trans', label: '应力转化工具', icon: Zap },
+        { id: 'stress-trans', label: '干湿循环-盐结晶转化应力', icon: Zap },
 
         { id: 'cement-analysis', label: '水泥品种聚类分析', icon: Beaker },
         { id: 'calc', label: '计算器', icon: Calculator },
@@ -100,6 +111,7 @@ const App = () => {
         { id: 'db-filter', label: '数据筛选' },
         { id: 'db-manage', label: '浏览管理' },
         { id: 'db-stats', label: '数据统计' },
+        { id: 'ai-reader', label: 'AI文献数据提取' },
         { id: 'db-settings', label: '选项设置' }
       ]
     },
@@ -244,6 +256,7 @@ const App = () => {
       case 'db-filter': return <DataFilter />;
       case 'db-manage': return <DataBrowser />;
       case 'db-stats': return <DataStatistics />;
+      case 'ai-reader': return <AIReader />;
       case 'db-settings': return <DictionarySettings />;
       case 'settings': return <SystemSettings />;
       default: return null;
@@ -253,14 +266,10 @@ const App = () => {
   return (
     <div className="flex h-screen bg-slate-200 text-slate-800 overflow-hidden font-sans selection:bg-brand-100 selection:text-brand-700">
       <aside className="w-[260px] xl:w-[280px] bg-white flex flex-col border-r border-slate-200/60 shadow-[4px_0_24px_rgba(0,0,0,0.02)] shrink-0 z-30">
-        <div className="p-8 border-b border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-100">
-              <Zap size={24} fill="white" />
-            </div>
-            <div>
-              <h1 className="text-[14px] font-black text-slate-900 leading-tight uppercase tracking-tighter">混凝土耐久性<br />预测系统</h1>
-              <p className="text-[10px] text-brand-500 font-black uppercase mt-1 tracking-widest">Scientific Version</p>
+        <div className="py-6 border-b border-slate-100">
+          <div className="flex items-center justify-center w-full">
+            <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)] overflow-hidden border border-slate-100">
+              <img src={logoImg} className="w-full h-full object-contain p-1" alt="Logo" />
             </div>
           </div>
         </div>
