@@ -7,7 +7,7 @@ export interface DataPoint {
   strength: number;
 }
 
-export function anchorPredictionsToInitialStrength(
+export function applyInitialStrengthAtDayZero(
   results: DataPoint[],
   initialStrength: number
 ): DataPoint[] {
@@ -15,17 +15,10 @@ export function anchorPredictionsToInitialStrength(
     return results;
   }
 
-  const baselinePoint = results.find(point => point.time === 0);
-  if (!baselinePoint || !Number.isFinite(baselinePoint.strength)) {
-    return results;
-  }
-
-  const baselineOffset = baselinePoint.strength - initialStrength;
-
-  return results.map(point => ({
-    ...point,
-    strength: Math.round((point.strength - baselineOffset) * 100) / 100
-  }));
+  return results.map(point => point.time === 0
+    ? { ...point, strength: Math.round(initialStrength * 100) / 100 }
+    : point
+  );
 }
 
 export async function executeInference(data: PredictionData, timePoints: number[]): Promise<DataPoint[]> {
@@ -53,5 +46,5 @@ export async function executeInference(data: PredictionData, timePoints: number[
     }
   }
 
-  return anchorPredictionsToInitialStrength(results, data.initialStrength);
+  return applyInitialStrengthAtDayZero(results, data.initialStrength);
 }
