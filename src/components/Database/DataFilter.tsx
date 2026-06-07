@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { databaseService } from '../../services/databaseService';
 import { save } from '@tauri-apps/plugin-dialog';
 import { invoke } from '@tauri-apps/api/core';
+import { normalizeCementCategoryForModel } from '../../utils/ai/inferenceService';
 
 interface DataRow {
   [key: string]: any;
@@ -84,7 +85,7 @@ const DataFilter = () => {
     setIsCheckingAnomaly(true);
     try {
       const aiVectors = fileData.map(row => [
-        String(row.jlcement || 'A'),
+        normalizeCementCategoryForModel(row.jlcement || 1),
         Number(row.cementstrength || 0),
         Number(row.wc || 0),
         Number(row.specificarea || 0),

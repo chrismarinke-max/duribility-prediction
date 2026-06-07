@@ -32,9 +32,42 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
     };
   }), [results, c0, cs, x]);
 
+  const concentrationAxis = useMemo(() => {
+    const values = assessmentData
+      .map(item => item.concentration)
+      .filter(Number.isFinite);
+
+    if (values.length === 0) {
+      return { domain: [0, 1] as [number, number], ticks: [0, 0.25, 0.5, 0.75, 1] };
+    }
+
+    let min = Math.min(...values);
+    let max = Math.max(...values);
+
+    if (showWarning && warningLevel > 0) {
+      min = Math.min(min, warningLevel);
+      max = Math.max(max, warningLevel);
+    }
+
+    const rawRange = max - min;
+    const range = rawRange > 0 ? rawRange : Math.max(Math.abs(max) * 0.02, 0.001);
+    const padding = range * 0.08;
+    const domainMin = Math.max(0, min - padding);
+    const domainMax = max + padding;
+    const tickCount = 5;
+    const ticks = Array.from({ length: tickCount }, (_, index) =>
+      Number((domainMin + (domainMax - domainMin) * index / (tickCount - 1)).toFixed(6))
+    );
+
+    return {
+      domain: [domainMin, domainMax] as [number, number],
+      ticks
+    };
+  }, [assessmentData, showWarning, warningLevel]);
+
   const dtRange = {
-    min: assessmentData[0].dt.toExponential(3),
-    max: assessmentData[assessmentData.length - 1].dt.toExponential(3)
+    min: assessmentData[0]?.dt.toExponential(3) ?? '--',
+    max: assessmentData[assessmentData.length - 1]?.dt.toExponential(3) ?? '--'
   };
 
   const handleExportExcel = async () => {
@@ -55,7 +88,7 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
       await invoke('save_excel_to_path', { content: Array.from(new Uint8Array(excelBuffer)), fullPath: selectedPath });
       setExportState('success');
       setTimeout(() => setExportState('idle'), 2000);
-    } catch (err) { setExportState('idle'); }
+    } catch { setExportState('idle'); }
   };
 
   const handleSaveImage = async () => {
@@ -77,7 +110,7 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
       await invoke('save_excel_to_path', { content: Array.from(uint8Array), fullPath: selectedPath });
       setImageState('success');
       setTimeout(() => setImageState('idle'), 2000);
-    } catch (err) { setImageState('idle'); }
+    } catch { setImageState('idle'); }
   };
 
   return (
@@ -140,10 +173,10 @@ const Step3CorrosionAssessment = ({ results }: { results: DataPoint[] }) => {
                 label={{ value: '时间 t / d', position: 'insideBottom', offset: -10, fontSize: 14, fontWeight: 900, fill: '#0f172a' }}
               />
               <YAxis 
-                domain={showWarning 
-                  ? [(dataMin: number) => Math.min(dataMin, warningLevel) * 0.8, (dataMax: number) => Math.max(dataMax, warningLevel) * 1.2] 
-                  : [(dataMin: number) => dataMin * 0.98, (dataMax: number) => dataMax * 1.02]
-                }
+                domain={concentrationAxis.domain}
+                ticks={concentrationAxis.ticks}
+                tickFormatter={(value: number) => Number(value.toFixed(4)).toString()}
+                width={72}
                 axisLine={{ stroke: '#1e293b', strokeWidth: 2 }} 
                 tickLine={true}
                 tick={{ fontSize: 14, fontWeight: 900, fill: '#0f172a' }}

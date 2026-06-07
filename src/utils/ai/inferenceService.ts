@@ -1,25 +1,22 @@
 import { invoke } from '@tauri-apps/api/core';
 import type { PredictionData } from '../../store/predictionStore';
 
+export type ModelFeature = string | number;
+
 /**
  * PRODUCTION-ALIGNED 18D Vector Assembly
  * Maps UI-friendly names (PredictionData) to the required ONNX inputs
  */
-export const assembleFeatureVector = (data: PredictionData, time: number): any[] => {
+export const assembleFeatureVector = (data: PredictionData, time: number): ModelFeature[] => {
   const isLoadMode = data.loadFactor > 0;
-  
-  // Map categoryId (1-5) back to Letter (A-E)
-  const cementTypeMap: Record<number, string> = {
-    1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E'
-  };
-  const cementLetter = cementTypeMap[data.cementType] || 'A';
+  const cementCategory = normalizeCementCategoryForModel(data.cementType);
 
   if (isLoadMode) {
     /**
      * LOAD MODE (hzl mode)
      */
     return [
-      cementLetter,          // 0: jlcement
+      cementCategory,        // 0: jlcement ("1"-"5")
       data.cementStrength,   // 1: cementstrength
       data.wc,               // 2: wc
       data.svRatio,          // 3: specificarea (1000 * S/V)
@@ -43,7 +40,7 @@ export const assembleFeatureVector = (data: PredictionData, time: number): any[]
      * STANDARD ENVIRONMENTAL MODE
      */
     return [
-      cementLetter,          // 0: jlcement
+      cementCategory,        // 0: jlcement ("1"-"5")
       data.cementStrength,   // 1: cementstrength
       data.wc,               // 2: wc
       data.svRatio,          // 3: specificarea
@@ -65,7 +62,25 @@ export const assembleFeatureVector = (data: PredictionData, time: number): any[]
   }
 };
 
-export const performInference = async (inputVector: any[]): Promise<number> => {
+const CEMENT_CATEGORY_BY_LETTER: Record<string, string> = {
+  A: '1',
+  B: '2',
+  C: '3',
+  D: '4',
+  E: '5'
+};
+
+export const normalizeCementCategoryForModel = (category: unknown): string => {
+  const normalized = String(category).trim().toUpperCase();
+
+  if (/^[1-5]$/.test(normalized)) {
+    return normalized;
+  }
+
+  return CEMENT_CATEGORY_BY_LETTER[normalized] || '1';
+};
+
+export const performInference = async (inputVector: ModelFeature[]): Promise<number> => {
   try {
     return await invoke<number>('run_prediction', { input: inputVector });
   } catch (error) {
