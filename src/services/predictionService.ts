@@ -7,30 +7,6 @@ export interface DataPoint {
   strength: number;
 }
 
-export function anchorPredictionsToInitialStrength(
-  results: DataPoint[],
-  initialStrength: number
-): DataPoint[] {
-  if (results.length === 0 || !Number.isFinite(initialStrength)) {
-    return results;
-  }
-
-  const baselinePoint = results.reduce((earliest, point) =>
-    point.time < earliest.time ? point : earliest
-  );
-
-  if (baselinePoint.time !== 0 || !Number.isFinite(baselinePoint.strength)) {
-    return results;
-  }
-
-  const baselineOffset = baselinePoint.strength - initialStrength;
-
-  return results.map(point => ({
-    ...point,
-    strength: Math.round((point.strength - baselineOffset) * 100) / 100
-  }));
-}
-
 export async function executeInference(data: PredictionData, timePoints: number[]): Promise<DataPoint[]> {
   const results: DataPoint[] = [];
 
@@ -56,7 +32,5 @@ export async function executeInference(data: PredictionData, timePoints: number[
     }
   }
 
-  // Keep the model-predicted evolution while anchoring t=0 to the measured
-  // 28-day compressive strength supplied by the user.
-  return anchorPredictionsToInitialStrength(results, data.initialStrength);
+  return results;
 }

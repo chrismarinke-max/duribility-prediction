@@ -10,6 +10,9 @@ export type ModelFeature = string | number;
 export const assembleFeatureVector = (data: PredictionData, time: number): ModelFeature[] => {
   const isLoadMode = data.loadFactor > 0;
   const cementCategory = normalizeCementCategoryForModel(data.cementType);
+  const wettingTime = data.isDryWet ? data.wettingTime : 24;
+  const dryingTime = data.isDryWet ? data.dryingTime : 0;
+  const dryingTemp = data.isDryWet ? data.dryingTemp : data.wettingTemp;
 
   if (isLoadMode) {
     /**
@@ -52,10 +55,10 @@ export const assembleFeatureVector = (data: PredictionData, time: number): Model
       data.mg,               // 9: Mg
       data.cl,               // 10: Cl
       data.so4,              // 11: SO4
-      data.wettingTime,      // 12: wettingtime
+      wettingTime,           // 12: wettingtime
       data.wettingTemp,      // 13: wettingtemp
-      data.dryingTime,       // 14: dryingtime
-      data.dryingTemp,       // 15: dryingtemp
+      dryingTime,            // 14: dryingtime
+      dryingTemp,            // 15: dryingtemp
       1.0,                   // 16: cycle
       time                   // 17: degradationtime
     ];
@@ -73,11 +76,16 @@ const CEMENT_CATEGORY_BY_LETTER: Record<string, string> = {
 export const normalizeCementCategoryForModel = (category: unknown): string => {
   const normalized = String(category).trim().toUpperCase();
 
-  if (/^[1-5]$/.test(normalized)) {
-    return normalized;
+  if (/^[1-5](?:\.0+)?$/.test(normalized)) {
+    return String(Number(normalized));
   }
 
-  return CEMENT_CATEGORY_BY_LETTER[normalized] || '1';
+  const mappedCategory = CEMENT_CATEGORY_BY_LETTER[normalized];
+  if (mappedCategory) {
+    return mappedCategory;
+  }
+
+  throw new Error(`Unsupported cement category: ${String(category)}`);
 };
 
 export const performInference = async (inputVector: ModelFeature[]): Promise<number> => {

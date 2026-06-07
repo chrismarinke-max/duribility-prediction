@@ -8,49 +8,50 @@ import DecimalInput from '../common/DecimalInput';
 const cementTypes = [
   { id: 0, name: '自定义水泥（触发聚类分析）', category: '?', categoryId: 0 },
   { id: 1, name: 'P.I 硅酸盐水泥', category: 'A', categoryId: 1 },
-  { id: 2, name: 'P.II 硅酸盐水泥', category: 'A', categoryId: 1 },
-  { id: 3, name: 'P.O 普通硅酸盐水泥', category: 'B', categoryId: 2 },
-  { id: 4, name: 'P.S.A 矿渣硅酸盐水泥', category: 'B', categoryId: 2 },
-  { id: 5, name: 'P.S.B 矿渣硅酸盐水泥', category: 'B', categoryId: 2 },
+  { id: 2, name: 'P.II 硅酸盐水泥', category: 'B', categoryId: 2 },
+  { id: 3, name: 'P.O 普通硅酸盐水泥', category: 'C', categoryId: 3 },
+  { id: 4, name: 'P.S.A 矿渣硅酸盐水泥', category: 'D', categoryId: 4 },
+  { id: 5, name: 'P.S.B 矿渣硅酸盐水泥', category: 'D', categoryId: 4 },
   { id: 6, name: 'P.P 火山灰硅酸盐水泥', category: 'D', categoryId: 4 },
   { id: 7, name: 'P.F 粉煤灰硅酸盐水泥', category: 'D', categoryId: 4 },
-  { id: 8, name: 'P.C 复合硅酸盐水泥', category: 'C', categoryId: 3 },
-  { id: 9, name: 'Type I', category: 'A', categoryId: 1 },
+  { id: 8, name: 'P.C 复合硅酸盐水泥', category: 'E', categoryId: 5 },
+  { id: 9, name: 'Type I', category: 'B', categoryId: 2 },
   { id: 10, name: 'Type II', category: 'B', categoryId: 2 },
   { id: 11, name: 'Type III', category: 'A', categoryId: 1 },
-  { id: 12, name: 'Type IV', category: 'D', categoryId: 4 },
-  { id: 13, name: 'Type V', category: 'E', categoryId: 5 },
+  { id: 12, name: 'Type IV', category: 'A', categoryId: 1 },
+  { id: 13, name: 'Type V', category: 'A', categoryId: 1 },
   { id: 14, name: 'IS (Blast Furnace Slag)', category: 'B', categoryId: 2 },
   { id: 15, name: 'IP (Pozzolanic)', category: 'D', categoryId: 4 },
   { id: 16, name: 'IT (Ternary Blended)', category: 'C', categoryId: 3 },
-  { id: 17, name: 'CEM I (Ordinary)', category: 'A', categoryId: 1 },
-  { id: 18, name: 'CEM II/S (Slag)', category: 'B', categoryId: 2 },
-  { id: 19, name: 'CEM II/D (Silica Fume)', category: 'A', categoryId: 1 },
+  { id: 17, name: 'CEM I (Ordinary)', category: 'B', categoryId: 2 },
+  { id: 18, name: 'CEM II/S (Slag)', category: 'D', categoryId: 4 },
+  { id: 19, name: 'CEM II/D (Silica Fume)', category: 'B', categoryId: 2 },
   { id: 20, name: 'CEM II/P (Pozzolan)', category: 'D', categoryId: 4 },
-  { id: 21, name: 'CEM II/Q (Quartzite)', category: 'D', categoryId: 4 },
-  { id: 22, name: 'CEM II/V (Fly Ash)', category: 'D', categoryId: 4 },
-  { id: 23, name: 'CEM II/W (Fly Ash)', category: 'D', categoryId: 4 },
-  { id: 24, name: 'CEM II/T (Ternary)', category: 'C', categoryId: 3 },
+  { id: 21, name: 'CEM II/Q (Quartzite)', category: '?', categoryId: 0 },
+  { id: 22, name: 'CEM II/V (Fly Ash)', category: 'E', categoryId: 5 },
+  { id: 23, name: 'CEM II/W (Fly Ash)', category: '?', categoryId: 0 },
+  { id: 24, name: 'CEM II/T (Ternary)', category: '?', categoryId: 0 },
   { id: 25, name: 'CEM II/L (Limestone)', category: 'C', categoryId: 3 },
-  { id: 26, name: 'CEM II/LL (Limestone)', category: 'C', categoryId: 3 },
-  { id: 27, name: 'CEM II/M (Composite)', category: 'C', categoryId: 3 },
-  { id: 28, name: 'CEM III (Blast Furnace)', category: 'B', categoryId: 2 },
-  { id: 29, name: 'CEM IV (Pozzolanic)', category: 'D', categoryId: 4 },
+  { id: 26, name: 'CEM II/LL (Limestone)', category: '?', categoryId: 0 },
+  { id: 27, name: 'CEM II/M (Composite)', category: '?', categoryId: 0 },
+  { id: 28, name: 'CEM III (Blast Furnace)', category: 'D', categoryId: 4 },
+  { id: 29, name: 'CEM IV (Pozzolanic)', category: 'E', categoryId: 5 },
   { id: 30, name: 'CEM V (Composite)', category: 'E', categoryId: 5 },
-  { id: 31, name: 'JIS Class A', category: 'B', categoryId: 2 },
-  { id: 32, name: 'JIS Class B', category: 'B', categoryId: 2 },
-  { id: 33, name: 'JIS Class C', category: 'B', categoryId: 2 },
+  { id: 31, name: 'JIS Class A', category: 'C', categoryId: 3 },
+  { id: 32, name: 'JIS Class B', category: 'E', categoryId: 5 },
+  { id: 33, name: 'JIS Class C', category: 'E', categoryId: 5 },
   { id: 34, name: 'JIS HSPC', category: 'A', categoryId: 1 },
   { id: 35, name: 'JIS USPC', category: 'A', categoryId: 1 },
   { id: 36, name: 'JIS OPC', category: 'A', categoryId: 1 },
-  { id: 37, name: 'JIS MHPC', category: 'B', categoryId: 2 },
-  { id: 38, name: 'JIS LHPC', category: 'E', categoryId: 5 },
-  { id: 39, name: 'JIS SRPC', category: 'E', categoryId: 5 },
+  { id: 37, name: 'JIS MHPC', category: 'A', categoryId: 1 },
+  { id: 38, name: 'JIS LHPC', category: 'A', categoryId: 1 },
+  { id: 39, name: 'JIS SRPC', category: 'A', categoryId: 1 },
 ];
 
 const Step1Materials = () => {
   const { predictionData, updateData } = usePredictionStore();
   const [showCluster, setShowCluster] = useState(false);
+  const [pendingCementId, setPendingCementId] = useState(0);
   const [localAdmixtures, setLocalAdmixtures] = useState({
     flyash: 0, slag: 0, silicafume: 0, pozzolan: 0, limestone: 0, shale: 0
   });
@@ -58,8 +59,14 @@ const Step1Materials = () => {
   const handleTypeChange = (id: number) => {
     const selected = cementTypes.find(t => t.id === id);
     if (!selected) return;
-    if (selected.id === 0) {
-      updateData({ cementType: 0, selectedCementId: 0 });
+    if (selected.categoryId === 0) {
+      setPendingCementId(selected.id);
+      setLocalAdmixtures(current => ({
+        ...current,
+        flyash: predictionData.flyash,
+        slag: predictionData.slag,
+        silicafume: predictionData.silicafume
+      }));
       setShowCluster(true);
     } else {
       updateData({ cementType: selected.categoryId, selectedCementId: selected.id });
@@ -68,7 +75,7 @@ const Step1Materials = () => {
 
   const runAnalysis = () => {
     const result = clusterCement(localAdmixtures);
-    updateData({ cementType: result.id, selectedCementId: 0 });
+    updateData({ cementType: result.id, selectedCementId: pendingCementId });
     setShowCluster(false);
   };
 
@@ -121,11 +128,11 @@ const Step1Materials = () => {
         <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100 flex flex-col min-h-0">
           <h3 className="text-lg font-black text-slate-900 mb-6 shrink-0">矿物掺合料比重 (%)</h3>
           <div className="space-y-6 flex-1 flex flex-col justify-center overflow-y-auto custom-scrollbar pr-1">
-            {[
+            {([
               { label: '粉煤灰 Fly Ash', key: 'flyash' },
               { label: '矿渣 Slag', key: 'slag' },
               { label: '硅灰 Silica Fume', key: 'silicafume' }
-            ].map(item => (
+            ] as const).map(item => (
               <div key={item.key} className="flex flex-col space-y-2">
                 <label className="text-base font-black text-slate-900 px-1">
                   {item.label}
@@ -133,7 +140,7 @@ const Step1Materials = () => {
                 <div className="relative">
                   <DecimalInput
                     className="w-full h-12 px-5 input-standard text-center text-2xl font-black rounded-xl"
-                    value={(predictionData as any)[item.key] ?? 0}
+                    value={predictionData[item.key] ?? 0}
                     onValueChange={(value) => updateData({ [item.key]: value })}
                   />
                   <span className="absolute right-5 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">%</span>
@@ -205,19 +212,19 @@ const Step1Materials = () => {
 
               <div className="p-10 space-y-8">
                 <div className="grid grid-cols-2 gap-6">
-                  {[
+                  {([
                     { label: '粉煤灰 Fly Ash (%)', key: 'flyash' },
                     { label: '矿渣 Slag (%)', key: 'slag' },
                     { label: '硅灰 Silica Fume (%)', key: 'silicafume' },
                     { label: '火山灰 Pozzolan (%)', key: 'pozzolan' },
                     { label: '石灰石 Limestone (%)', key: 'limestone' },
                     { label: '页岩 Shale (%)', key: 'shale' }
-                  ].map(item => (
+                  ] as const).map(item => (
                     <div key={item.key} className="space-y-2">
                       <label className="text-xs font-black text-slate-500 tracking-widest px-1">{item.label}</label>
                       <DecimalInput
                         className="w-full h-12 px-5 input-standard text-center text-lg font-bold rounded-xl"
-                        value={(localAdmixtures as any)[item.key]}
+                        value={localAdmixtures[item.key]}
                         onValueChange={(value) => setLocalAdmixtures({...localAdmixtures, [item.key]: value})}
                       />
                     </div>
